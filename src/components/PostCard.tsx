@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { User } from "lucide-react";
+import CommentSection from "./Comments/CommentSection";
 
 interface PostCardProps {
   post: Post;
@@ -57,7 +58,7 @@ const PostCard = ({ post }: PostCardProps) => {
         </div>
       </Link>
       <div className="px-6 py-2 bg-primary-foreground shadow-md rounded-lg flex gap-2 flex-col">
-        first comment ,see more
+        <CommentSection post={post} />
       </div>
     </div>
   );
