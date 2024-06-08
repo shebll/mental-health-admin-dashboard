@@ -1,6 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/providers/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { login } from "@/utlis/auth";
 import { FormSchema, FormSchemaType } from "@/types/LoginFormSchema";
 
@@ -92,3 +92,4 @@ export default function InputForm() {
     </Form>
   );
 }
+// restructure
