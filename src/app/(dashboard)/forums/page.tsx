@@ -6,6 +6,7 @@ import { useInView } from "react-intersection-observer";
 
 import usePosts from "@/hooks/usePosts";
 import { useState, useRef, useCallback, useEffect } from "react";
+import PageTitle from "@/components/ui/PageTitle";
 
 export default function Home() {
   const [page, setPage] = useState<number>(1);
@@ -24,8 +25,9 @@ export default function Home() {
   }, [inView, hasMore, loading]);
 
   return (
-    <div className="container max-w-[600px] mx-auto p-4">
-      <SearchFilter
+    <div className="container max-w-[600px] mx-auto p-0 flex flex-col gap-4">
+      <PageTitle title="Forums" />
+      {/* <SearchFilter
         onSearch={(val) => {
           setQuery(val);
           setPage(1);
@@ -34,20 +36,24 @@ export default function Home() {
           setIsConfusionFilter(val);
           setPage(1);
         }}
-      />
-      {posts.map((post, index) => (
-        <PostCard key={post.id} post={post} />
-      ))}
-      <div ref={ref} />
-      {loading && (
-        <>
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
-        </>
-      )}
+      /> */}
+      <div className="flex flex-col gap-4">
+        {posts.map((post, index) => (
+          <PostCard key={post.id} post={post} />
+        ))}
+        <div className="flex flex-col gap-4">
+          {loading && (
+            <>
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+              <PostSkeleton />
+            </>
+          )}
+        </div>
+        <div ref={ref} />
+      </div>
     </div>
   );
 }

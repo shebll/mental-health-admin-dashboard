@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/providers/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { Post } from "@/types/Posts";
 import { useState, useEffect } from "react";
 

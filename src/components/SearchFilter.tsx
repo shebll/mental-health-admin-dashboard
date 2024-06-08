@@ -13,7 +13,7 @@ const SearchFilter = ({ onSearch, onFilter }: SearchFilterProps) => {
   };
 
   return (
-    <div className="flex mb-4">
+    <div className="flex  mb-4">
       <input
         type="text"
         placeholder="Search by title..."

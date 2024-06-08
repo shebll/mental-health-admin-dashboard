@@ -7,5 +7,9 @@ type Props = {
 };
 
 export default function PageTitle({ title, className }: Props) {
-  return <h1 className={cn("text-2xl font-semibold", className)}>{title}</h1>;
+  return (
+    <h1 className={cn("ml-10 lg:ml-0 text-2xl font-semibold", className)}>
+      {title}
+    </h1>
+  );
 }

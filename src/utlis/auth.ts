@@ -20,6 +20,7 @@ export async function login(email: string, password: string) {
 }
 
 interface TokenPayload {
+  id: string;
   email: string;
   name: string;
   roles: string;
@@ -29,6 +30,7 @@ interface TokenPayload {
 export function decodeToken(token: string): TokenPayload {
   const decoded = jwtDecode<any>(token);
   return {
+    id: decoded.uid,
     email: decoded.email,
     name: decoded.name,
     roles: decoded.roles,

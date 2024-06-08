@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/providers/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 
 export const useFetchWithAuth = () => {
   const { token } = useAuth();

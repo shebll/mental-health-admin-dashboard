@@ -5,6 +5,7 @@ import { setCookie, destroyCookie, parseCookies } from "nookies";
 import { decodeToken } from "@/utlis/auth";
 
 interface User {
+  id: string;
   email: string;
   name: string;
   roles: string;
