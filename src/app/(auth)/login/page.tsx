@@ -1,9 +1,14 @@
 "use client";
-import { Loader2 } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/providers/AuthContext";
+import { login } from "@/utlis/auth";
+import { FormSchema, FormSchemaType } from "@/types/LoginFormSchema";
+
+// zod react form
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
+// UI
 import {
   Form,
   FormControl,
@@ -14,24 +19,16 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-import { useAuth } from "@/providers/AuthContext";
-import { login } from "@/utlis/auth";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter, useSearchParams } from "next/navigation";
-
-const FormSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1, {
-    message: "you have to enter your password",
-  }),
-});
 
 export default function InputForm() {
   const router = useRouter();
   const params = useSearchParams();
+
   const { login: loginUser } = useAuth();
-  const form = useForm<z.infer<typeof FormSchema>>({
+
+  const form = useForm<FormSchemaType>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
@@ -39,10 +36,10 @@ export default function InputForm() {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: FormSchemaType) {
     try {
       const token = await login(data.email, data.password);
-      toast.success("login successfully");
+      toast.success("Login successfully");
       form.reset();
       loginUser(token);
       router.push((params.get("callback") as string) || "/");
