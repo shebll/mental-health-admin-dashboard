@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { decodeToken } from "./utlis/auth";
+import { decodeToken } from "./utils/auth";
 import { authRoutes, protectedRoutes } from "./data/routes";
 
 export function middleware(request: NextRequest) {

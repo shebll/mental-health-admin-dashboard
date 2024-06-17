@@ -20,4 +20,3 @@ const PostSkeleton = () => {
 };
 
 export default PostSkeleton;
-//

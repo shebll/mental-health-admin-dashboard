@@ -2,7 +2,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { setCookie, destroyCookie, parseCookies } from "nookies";
-import { decodeToken } from "@/utlis/auth";
+import { decodeToken } from "@/utils/auth";
 
 interface User {
   id: string;

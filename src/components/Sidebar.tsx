@@ -19,7 +19,7 @@ export function Sidebar() {
     <>
       <Menu
         size={30}
-        className="cursor-pointer absolute left-[22px] top-[18px] lg:hidden"
+        className="cursor-pointer absolute left-[22px] top-[18px] lg:hidden z-[2]"
         onClick={() => setToggle((prev) => !prev)}
       />
       <span

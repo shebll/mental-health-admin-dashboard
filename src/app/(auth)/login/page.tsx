@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { login } from "@/utlis/auth";
+import { login } from "@/utils/auth";
 import { FormSchema, FormSchemaType } from "@/types/LoginFormSchema";
 
 // zod react form
