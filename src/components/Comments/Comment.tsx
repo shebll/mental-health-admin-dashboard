@@ -7,17 +7,39 @@ import { timeAgo } from "@/lib/timeAgoFunction";
 import { Trash } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { deleteCommentById } from "@/lib/api";
+import { toast } from "sonner";
 
 interface CommentProps {
   comment: CommentType;
   postId: string;
+  onDelete: (postId: string) => void;
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, postId }) => {
+const Comment: React.FC<CommentProps> = ({ comment, postId, onDelete }) => {
   const { token } = useAuth();
-  const { replies, loading } = useReplies(postId, comment.id);
+  const { replies, loading, setReplies } = useReplies(postId, comment.id);
   const [showReplies, setShowReplies] = useState<boolean>(false);
 
+  const handleDelete = async () => {
+    if (token) {
+      const response = await deleteCommentById(
+        token,
+        postId,
+        comment.id.toString()
+      );
+      if (response) {
+        toast.success("Comment Deleted Successfully");
+        onDelete(comment.id.toString());
+      } else {
+        toast.error("Failed To Delete Comment");
+      }
+    }
+  };
+
+  const handleDeleteReply = (ReplyId: string) => {
+    console.log(replies.filter((reply) => reply.id.toString() !== ReplyId));
+    setReplies([...replies.filter((reply) => reply.id.toString() !== ReplyId)]);
+  };
   return (
     <div className="comment">
       <div className="flex flex-col gap-2">
@@ -39,19 +61,14 @@ const Comment: React.FC<CommentProps> = ({ comment, postId }) => {
               </p>
             </div>
           </div>
-          <div
-            onClick={() =>
-              token && deleteCommentById(token, postId, comment.id.toString())
-            }
-            className=""
-          >
+          <div onClick={handleDelete} className="cursor-pointer">
             <Trash />
           </div>
         </div>
         <p className="ml-10">{comment.content}</p>
       </div>
       <div className="ml-10">
-        {comment.repliesCount > 0 && (
+        {replies.length > 0 && (
           <button
             onClick={() => setShowReplies(!showReplies)}
             className=" text-gray-500"
@@ -70,6 +87,7 @@ const Comment: React.FC<CommentProps> = ({ comment, postId }) => {
                   reply={reply}
                   postId={postId}
                   commentId={comment.id.toString()}
+                  onDelete={handleDeleteReply}
                 />
               ))
             )}

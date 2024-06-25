@@ -8,9 +8,7 @@ const usePosts = (page: any, query: any, isConfusionFilter: any) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<any>(true);
   const [hasMore, setHasMore] = useState<any>(true);
-  const pageSize = 5;
-  console.log(page);
-  console.log(hasMore);
+  const pageSize = 20;
   useEffect(() => {
     setLoading(true);
     fetch(
@@ -27,12 +25,12 @@ const usePosts = (page: any, query: any, isConfusionFilter: any) => {
       .then((data) => {
         console.log(data);
         setPosts((prevPosts: any) => [...prevPosts, ...data]);
-        setHasMore(data.length === 5);
+        setHasMore(data.length === pageSize);
         setLoading(false);
       });
   }, [page, query, isConfusionFilter, token]);
 
-  return { posts, loading, hasMore };
+  return { posts, loading, hasMore, setPosts };
 };
 
 export default usePosts;

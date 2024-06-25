@@ -4,15 +4,39 @@ import { ReplyType } from "@/types/Posts";
 import { Trash } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import { toast } from "sonner";
 
 interface ReplyProps {
   reply: ReplyType;
   commentId: string;
   postId: string;
+  onDelete: (postId: string) => void;
 }
 
-const Reply: React.FC<ReplyProps> = ({ reply, commentId, postId }) => {
+const Reply: React.FC<ReplyProps> = ({
+  reply,
+  commentId,
+  postId,
+  onDelete,
+}) => {
   const { token } = useAuth();
+
+  const handleDelete = async () => {
+    if (token) {
+      const response = await deleteReplyById(
+        token,
+        reply.id.toString(),
+        commentId,
+        postId
+      );
+      if (response) {
+        toast.success("reply Deleted Successfully");
+        onDelete(reply.id.toString());
+      } else {
+        toast.error("Failed To Delete reply");
+      }
+    }
+  };
   return (
     <div className="reply pl-8 flex justify-between">
       <div className="flex items-center gap-2">
@@ -32,13 +56,7 @@ const Reply: React.FC<ReplyProps> = ({ reply, commentId, postId }) => {
           <p>{reply.content}</p>
         </div>
       </div>
-      <div
-        onClick={() =>
-          token &&
-          deleteReplyById(token, reply.id.toString(), commentId, postId)
-        }
-        className="cursor-pointer max-w-sm"
-      >
+      <div onClick={handleDelete} className="cursor-pointer max-w-sm">
         <Trash size={18} />
       </div>
     </div>

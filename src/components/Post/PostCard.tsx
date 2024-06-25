@@ -5,13 +5,28 @@ import CommentSection from "../Comments/CommentSection";
 import { timeAgo } from "@/lib/timeAgoFunction";
 import { useAuth } from "@/context/AuthContext";
 import { deletePostById } from "@/lib/api";
+import { toast } from "sonner";
 
 interface PostCardProps {
   post: Post;
+  onDelete: (postId: string) => void;
 }
 
-const PostCard = ({ post }: PostCardProps) => {
+const PostCard = ({ post, onDelete }: PostCardProps) => {
   const { token } = useAuth();
+
+  const handleDelete = async () => {
+    if (token) {
+      const response = await deletePostById(token, post.id);
+      if (response) {
+        toast.success("Post Deleted Successfully");
+        onDelete(post.id);
+      } else {
+        toast.error("Failed to delete post");
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col gap-2 border p-4 rounded-md">
       <div className="px-6 py-8 bg-primary-foreground shadow-md rounded-lg flex gap-2 flex-col">
@@ -38,10 +53,7 @@ const PostCard = ({ post }: PostCardProps) => {
               </p>
             </div>
           </div>
-          <div
-            onClick={() => token && deletePostById(token, post.id)}
-            className="cursor-pointer"
-          >
+          <div onClick={handleDelete} className="cursor-pointer">
             <Trash />
           </div>
         </div>

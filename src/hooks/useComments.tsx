@@ -15,7 +15,7 @@ export const useComments = (postId: string) => {
       });
   }, [postId]);
 
-  return { comments, loading };
+  return { comments, loading, setComments };
 };
 
 export const useReplies = (postId: string, commentId: number) => {
@@ -34,5 +34,5 @@ export const useReplies = (postId: string, commentId: number) => {
       });
   }, [postId, commentId]);
 
-  return { replies, loading };
+  return { replies, loading, setReplies };
 };
