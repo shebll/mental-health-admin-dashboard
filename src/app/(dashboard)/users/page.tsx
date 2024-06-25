@@ -3,24 +3,16 @@ import { fetchUsers } from "@/lib/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { useInView } from "react-intersection-observer";
-import { Slider } from "@mui/material";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
+
 import UserCard from "@/components/Users/UserCard";
 import UserDetails from "@/components/Users/UserDetails";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { egyptianCities } from "@/data/egyptianCities";
-import { specializations } from "@/data/specializations";
+import { UserType } from "@/types/UserType";
 
 const UsersPage = () => {
   const { token } = useAuth();
-  const [Users, setUsers] = useState<UserType[]>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
   const { ref, inView } = useInView({ threshold: 1.0 });
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
@@ -34,11 +26,7 @@ const UsersPage = () => {
   const getFiltersFromURL = () => {
     return {
       Name: searchParams.get("Name") || "",
-      Specialization: searchParams.get("Specialization") || "",
       Gender: searchParams.get("Gender") || "",
-      City: searchParams.get("City") || "",
-      MinFees: parseInt(searchParams.get("MinFees") || "0", 10),
-      MaxFees: parseInt(searchParams.get("MaxFees") || "1000", 10),
     };
   };
 
@@ -72,35 +60,16 @@ const UsersPage = () => {
   useEffect(() => {
     const params = new URLSearchParams();
 
-    if (filters.City) params.set("City", filters.City);
     if (filters.Gender) params.set("Gender", filters.Gender);
     if (filters.Name) params.set("Name", filters.Name);
-    if (filters.Specialization)
-      params.set("Specialization", filters.Specialization);
-    if (filters.MaxFees) params.set("MaxFees", filters.MaxFees.toString());
-    if (filters.MinFees) params.set("MinFees", filters.MinFees.toString());
-
     router.replace(`?${params.toString()}`);
   }, [filters, router]);
 
-  const handleFeesChange = (event: Event, newValue: number | number[]) => {
-    setFilters((prev) => ({
-      ...prev,
-      MinFees: (newValue as number[])[0],
-      MaxFees: (newValue as number[])[1],
-    }));
-  };
-
   const resetFilters = () => {
     setFilters({
-      City: "",
       Name: "",
       Gender: "",
-      Specialization: "",
-      MinFees: 0,
-      MaxFees: 1000,
     });
-    router.replace("/Users");
   };
 
   const handleFilterChange = (newFilters: any) => {
@@ -113,20 +82,6 @@ const UsersPage = () => {
     setFilters((prev) => ({
       ...prev,
       [name]: value,
-    }));
-  };
-
-  const handleCityChange = (city: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      City: city,
-    }));
-  };
-
-  const handleSpecializationChange = (specialization: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      Specialization: specialization,
     }));
   };
 
@@ -152,26 +107,8 @@ const UsersPage = () => {
               className="p-2 border rounded"
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="Specialization">Specialization</label>
-            <Select
-              name="Specialization"
-              value={filters.Specialization}
-              onValueChange={handleSpecializationChange}
-            >
-              <SelectTrigger className="p-2 border rounded">
-                <SelectValue placeholder="All Specializations" />
-              </SelectTrigger>
-              <SelectContent>
-                {specializations.map((Specialization, idx) => (
-                  <SelectItem key={idx} value={Specialization.value}>
-                    {Specialization.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
           <div className="flex flex-row gap-4">
+            <label htmlFor="">Gender:</label>
             <label>
               <input
                 type="radio"
@@ -203,54 +140,6 @@ const UsersPage = () => {
               Female
             </label>
           </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="City">City</label>
-            <Select
-              name="City"
-              value={filters.City}
-              onValueChange={handleCityChange}
-            >
-              <SelectTrigger className="p-2 border rounded">
-                <SelectValue placeholder="All Cities" />
-              </SelectTrigger>
-              <SelectContent>
-                {egyptianCities.map((city, idx) => (
-                  <SelectItem key={idx} value={city.value}>
-                    {city.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Slider
-              value={[filters.MinFees, filters.MaxFees]}
-              onChange={handleFeesChange}
-              valueLabelDisplay="auto"
-              min={0}
-              max={1000}
-            />
-            <div className="fees-inputs">
-              <label htmlFor="MinFees">MinFees</label>
-              <Input
-                id="MinFees"
-                type="number"
-                name="MinFees"
-                placeholder="Min Fees"
-                value={filters.MinFees}
-                onChange={handleChange}
-              />
-              <label htmlFor="MaxFees">MaxFees</label>
-              <Input
-                id="MaxFees"
-                type="number"
-                name="MaxFees"
-                placeholder="Max Fees"
-                value={filters.MaxFees}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
           <button
             className="mt-4 p-2 bg-blue-500 text-white rounded"
             onClick={handleSubmit}
@@ -266,11 +155,11 @@ const UsersPage = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4">
-        {Users.map((User) => (
+        {users.map((user) => (
           <UserCard
-            key={User.id}
-            User={User}
-            onClick={() => setSelectedUser(User)}
+            key={user.id}
+            User={user}
+            onClick={() => setSelectedUser(user)}
           />
         ))}
       </div>
@@ -286,7 +175,7 @@ const UsersPage = () => {
       <div ref={ref} />
       {selectedUser && (
         <UserDetails
-          User={selectedUser}
+          user={selectedUser}
           onClose={() => setSelectedUser(null)}
         />
       )}
@@ -301,7 +190,6 @@ const UserLoading = () => {
     <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 mt-4 p-4 rounded-md ">
       <div className="flex flex-col md:flex-row  justify-start gap-20 items-start w-full">
         <div className="flex flex-col gap-4 w-full">
-          <span className="w-[40%] h-4 bg-secondary/50 rounded-lg animate-pulse"></span>
           <div className="flex items-start gap-6">
             <span className="w-[100px] h-[100px] rounded-full bg-secondary/50 animate-pulse"></span>
 
@@ -316,9 +204,6 @@ const UserLoading = () => {
         <span className="w-[26%] h-4 bg-secondary/50 rounded-md animate-pulse"></span>
         <p className="w-[24%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
         <p className="w-[67%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-        <p className="w-[47%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-        <p className="w-[68%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-        <p className="w-[37%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
       </div>
     </div>
   );

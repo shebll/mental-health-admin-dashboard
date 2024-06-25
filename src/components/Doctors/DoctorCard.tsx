@@ -1,3 +1,6 @@
+import { useAuth } from "@/context/AuthContext";
+import { deleteDoctorById } from "@/lib/api";
+import { Trash } from "lucide-react";
 import Image from "next/image";
 import { FC } from "react";
 
@@ -7,13 +10,14 @@ interface DoctorCardProps {
 }
 
 const DoctorCard: FC<DoctorCardProps> = ({ doctor, onClick }) => {
+  const { token } = useAuth();
   return (
     <div
       className="p-4 border rounded shadow-md cursor-pointer"
       onClick={onClick}
     >
       <div className="flex flex-col justify-start items-start gap-14">
-        <div className="flex flex-col md:flex-row justify-start gap-y-8 gap-x-20 items-start">
+        <div className="flex items-start justify-between w-full">
           <div className="flex flex-col gap-2">
             <h1>Doctor:</h1>
             <div className="flex items-start gap-6">
@@ -33,6 +37,12 @@ const DoctorCard: FC<DoctorCardProps> = ({ doctor, onClick }) => {
                 </p>
               </div>
             </div>
+          </div>
+          <div
+            onClick={() => token && deleteDoctorById(token, doctor.id)}
+            className=""
+          >
+            <Trash />
           </div>
         </div>
         <div className="flex flex-col gap-2 items-start">

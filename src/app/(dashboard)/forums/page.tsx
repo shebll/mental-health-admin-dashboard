@@ -1,5 +1,4 @@
 "use client";
-import PostCard from "@/components/PostCard";
 import PostSkeleton from "@/components/Post/PostSkeleton";
 import SearchFilter from "@/components/Post/SearchFilter";
 import { useInView } from "react-intersection-observer";
@@ -7,6 +6,7 @@ import { useInView } from "react-intersection-observer";
 import usePosts from "@/hooks/usePosts";
 import { useState, useRef, useCallback, useEffect } from "react";
 import PageTitle from "@/components/ui/PageTitle";
+import PostCard from "@/components/Post/PostCard";
 
 export default function Home() {
   const [page, setPage] = useState<number>(1);

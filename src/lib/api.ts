@@ -64,3 +64,57 @@ export const fetchDoctorById = async (token: string, id: string) => {
   });
   return data;
 };
+export const deleteDoctorById = async (token: string, id: string) => {
+  const { data } = await apiInstance.delete(`/doctors`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    data: {
+      doctorId: id,
+    },
+  });
+  return data;
+};
+
+export const fetchUsers = async (
+  page: number,
+  pageSize: number,
+  filters: any,
+  token: string
+) => {
+  const { data } = await apiInstance.get(`/users`, {
+    params: {
+      PageNumber: page,
+      PageSize: pageSize,
+      ...filters,
+    },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return data;
+};
+
+export const fetchUserById = async (token: string, id: string) => {
+  const { data } = await apiInstance.get(`/users/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return data;
+};
+export const deleteUserById = async (token: string, id: string) => {
+  const { data } = await apiInstance.delete(`/users`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    data: {
+      userId: id,
+    },
+  });
+  return data;
+};

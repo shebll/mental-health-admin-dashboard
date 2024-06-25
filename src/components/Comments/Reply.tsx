@@ -1,4 +1,3 @@
-// Reply.tsx
 import { ReplyType } from "@/types/Posts";
 import Image from "next/image";
 import React from "react";

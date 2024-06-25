@@ -1,24 +1,29 @@
+import { useAuth } from "@/context/AuthContext";
+import { deleteUserById } from "@/lib/api";
+import { UserType } from "@/types/UserType";
+import { Trash } from "lucide-react";
 import Image from "next/image";
 import { FC } from "react";
 
-interface DoctorCardProps {
-  doctor: DoctorType;
+interface UserCardProps {
+  User: UserType;
   onClick?: () => void;
 }
 
-const DoctorCard: FC<DoctorCardProps> = ({ doctor, onClick }) => {
+const UserCard: FC<UserCardProps> = ({ User, onClick }) => {
+  const { token } = useAuth();
+
   return (
     <div
       className="p-4 border rounded shadow-md cursor-pointer"
       onClick={onClick}
     >
       <div className="flex flex-col justify-start items-start gap-14">
-        <div className="flex flex-col md:flex-row justify-start gap-y-8 gap-x-20 items-start">
+        <div className="flex items-start justify-between w-full">
           <div className="flex flex-col gap-2">
-            <h1>Doctor:</h1>
             <div className="flex items-start gap-6">
               <Image
-                src={doctor.photoUrl ? doctor.photoUrl : "/user.png"}
+                src={User.photoUrl ? User.photoUrl : "/user.png"}
                 alt="clientPhotoUrl"
                 width={100}
                 height={100}
@@ -26,35 +31,29 @@ const DoctorCard: FC<DoctorCardProps> = ({ doctor, onClick }) => {
               />
               <div className="flex flex-col gap-1">
                 <h2 className="text-lg font-bold">
-                  <strong>{doctor.firstName + doctor.lastName}</strong>{" "}
+                  <strong>{User.firstName + User.lastName}</strong>{" "}
                 </h2>
                 <p>
-                  Email: <strong>{doctor.email} </strong>
+                  Email: <strong>{User.email} </strong>
                 </p>
               </div>
             </div>
+          </div>
+          <div
+            onClick={() => token && deleteUserById(token, User.id)}
+            className=""
+          >
+            <Trash />
           </div>
         </div>
         <div className="flex flex-col gap-2 items-start">
           <h2 className="text-lg font-bold">details</h2>
           <p>
-            sessionFees:<strong> ${doctor.sessionFees} </strong>
+            birthDate:<strong> {User.birthDate} </strong>
           </p>
+
           <p>
-            Location:
-            <strong> {doctor.location ? doctor.location : "not found"} </strong>
-          </p>
-          <p>
-            city:<strong> {doctor.city} </strong>
-          </p>
-          <p>
-            gender:<strong> {doctor.gender} </strong>
-          </p>
-          <p>
-            biography:<strong> {doctor.biography} </strong>
-          </p>
-          <p>
-            specialization:<strong> {doctor.specialization} </strong>
+            gender:<strong> {User.gender} </strong>
           </p>
         </div>
       </div>
@@ -62,4 +61,4 @@ const DoctorCard: FC<DoctorCardProps> = ({ doctor, onClick }) => {
   );
 };
 
-export default DoctorCard;
+export default UserCard;
