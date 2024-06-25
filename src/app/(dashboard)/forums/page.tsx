@@ -1,7 +1,7 @@
 "use client";
 import PostCard from "@/components/PostCard";
-import PostSkeleton from "@/components/PostSkeleton";
-import SearchFilter from "@/components/SearchFilter";
+import PostSkeleton from "@/components/Post/PostSkeleton";
+import SearchFilter from "@/components/Post/SearchFilter";
 import { useInView } from "react-intersection-observer";
 
 import usePosts from "@/hooks/usePosts";

@@ -1,7 +1,6 @@
 "use client";
 import AppointmentCard from "@/components/Appointment/AppointmentCard";
 import AppointmentDetails from "@/components/Appointment/AppointmentDetails";
-import Filter from "@/components/Appointment/Filter";
 import { fetchAppointments } from "@/lib/api";
 import { Appointment } from "@/types/appointment";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -172,10 +171,7 @@ const AppointmentsPage = () => {
           </div>
           <div className="">
             <label htmlFor="Status">Status</label>
-            <Select
-              defaultValue={filters.Status}
-              onValueChange={handleStatusChange}
-            >
+            <Select value={filters.Status} onValueChange={handleStatusChange}>
               <SelectTrigger className="p-2 border rounded">
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>

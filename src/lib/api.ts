@@ -1,5 +1,4 @@
 "use client";
-import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 
 const apiInstance = axios.create({
@@ -26,7 +25,42 @@ export const fetchAppointments = async (
   return data;
 };
 
-export const fetchAppointmentById = async (id: string) => {
-  const { data } = await apiInstance.get(`/appointments/${id}`);
+export const fetchAppointmentById = async (token: string, id: string) => {
+  const { data } = await apiInstance.get(`/appointments/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return data;
+};
+
+export const fetchDoctors = async (
+  page: number,
+  pageSize: number,
+  filters: any,
+  token: string
+) => {
+  const { data } = await apiInstance.get(`/doctors`, {
+    params: {
+      PageNumber: page,
+      PageSize: pageSize,
+      ...filters,
+    },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return data;
+};
+
+export const fetchDoctorById = async (token: string, id: string) => {
+  const { data } = await apiInstance.get(`/doctors/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return data;
 };

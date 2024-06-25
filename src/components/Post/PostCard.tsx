@@ -1,9 +1,9 @@
 import { Post } from "@/types/Posts";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { User } from "lucide-react";
-import CommentSection from "./Comments/CommentSection";
+import CommentSection from "../Comments/CommentSection";
 
 interface PostCardProps {
   post: Post;
