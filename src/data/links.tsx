@@ -1,4 +1,10 @@
-import { LayoutDashboardIcon, Users, UserCheck, Activity } from "lucide-react";
+import {
+  LayoutDashboardIcon,
+  Users,
+  UserCheck,
+  Activity,
+  Calendar,
+} from "lucide-react";
 import { ReactElement } from "react";
 
 export const sideBarLinks: {
@@ -14,4 +20,5 @@ export const sideBarLinks: {
   { name: "users", href: "/users", icon: <Users /> },
   { name: "forums", href: "/forums", icon: <Activity /> },
   { name: "doctors", href: "/doctors", icon: <UserCheck /> },
+  { name: "appointments", href: "/appointments", icon: <Calendar /> },
 ];
