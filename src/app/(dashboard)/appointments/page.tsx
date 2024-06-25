@@ -15,7 +15,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
 const AppointmentsPage = () => {
+  const { token } = useAuth();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const { ref, inView } = useInView({ threshold: 1.0 });
   const [loading, setLoading] = useState(true);
@@ -39,13 +41,21 @@ const AppointmentsPage = () => {
   };
   const [filters, setFilters] = useState(getFiltersFromURL);
 
-  const loadAppointments = useCallback(async (page: number, filters: any) => {
-    setLoading(true);
-    const data = await fetchAppointments(page, pageSize, filters);
-    setAppointments((prev) => (page === 1 ? data : [...prev, ...data]));
-    setHasMore(data.length === pageSize);
-    setLoading(false);
-  }, []);
+  const loadAppointments = useCallback(
+    async (page: number, filters: any) => {
+      setLoading(true);
+      const data = await fetchAppointments(
+        page,
+        pageSize,
+        filters,
+        token as string
+      );
+      setAppointments((prev) => (page === 1 ? data : [...prev, ...data]));
+      setHasMore(data.length === pageSize);
+      setLoading(false);
+    },
+    [token]
+  );
 
   useEffect(() => {
     loadAppointments(1, filters);
