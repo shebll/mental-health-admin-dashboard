@@ -1,25 +1,21 @@
 import { Post } from "@/types/Posts";
 import Image from "next/image";
-import Link from "next/link";
-import { Button } from "../ui/button";
-import { User } from "lucide-react";
+import { Trash, User } from "lucide-react";
 import CommentSection from "../Comments/CommentSection";
+import { timeAgo } from "@/lib/timeAgoFunction";
+import { useAuth } from "@/context/AuthContext";
+import { deletePostById } from "@/lib/api";
 
 interface PostCardProps {
   post: Post;
 }
 
 const PostCard = ({ post }: PostCardProps) => {
+  const { token } = useAuth();
   return (
-    <div className="flex flex-col gap-2">
-      <Link
-        href={`/forums/${post.id}`}
-        className="px-6 py-8 bg-primary-foreground shadow-md rounded-lg flex gap-2 flex-col"
-      >
-        <Link
-          href={`/users/${post.appUserId}`}
-          className="flex justify-between"
-        >
+    <div className="flex flex-col gap-2 border p-4 rounded-md">
+      <div className="px-6 py-8 bg-primary-foreground shadow-md rounded-lg flex gap-2 flex-col">
+        <div className="flex justify-between">
           <div className="flex items-center gap-2">
             {post.photoUrl ? (
               <Image
@@ -33,19 +29,26 @@ const PostCard = ({ post }: PostCardProps) => {
               <User size={40} className="bg-background p-1 rounded-full" />
             )}
 
-            {}
-            <h2 className="text-lg font-semibold">
-              {post.username ? post.username : "Anonymous"}
-            </h2>
+            <div className="flex flex-col ">
+              <h2 className="text-lg font-semibold">
+                {post.username ? post.username : "Anonymous"}
+              </h2>
+              <p className="text-sm text-primary/70">
+                {timeAgo(post.postedOn)}
+              </p>
+            </div>
           </div>
-          <Button size={"sm"} variant={"destructive"}>
-            Delete Post
-          </Button>
-        </Link>
+          <div
+            onClick={() => token && deletePostById(token, post.id)}
+            className="cursor-pointer"
+          >
+            <Trash />
+          </div>
+        </div>
         {post.postPhotoUrl && (
           <Image
-            width={140}
-            height={40}
+            width={240}
+            height={100}
             src={post.postPhotoUrl}
             alt="Post"
             className="w-full h-48 object-cover mb-2 rounded"
@@ -56,8 +59,8 @@ const PostCard = ({ post }: PostCardProps) => {
         <div className="text-end">
           <span>{post.commentsCount} Comments</span>
         </div>
-      </Link>
-      <div className="px-6 py-2 bg-primary-foreground shadow-md rounded-lg flex gap-2 flex-col">
+      </div>
+      <div className="px-6 py-2 min-h-8 bg-primary-foreground shadow-md rounded-lg flex gap-2 flex-col">
         <CommentSection post={post} />
       </div>
     </div>

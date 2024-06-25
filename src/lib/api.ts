@@ -118,3 +118,45 @@ export const deleteUserById = async (token: string, id: string) => {
   });
   return data;
 };
+export const deletePostById = async (token: string, id: string) => {
+  const { data } = await apiInstance.delete(`/posts/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return data;
+};
+export const deleteCommentById = async (
+  token: string,
+  postId: string,
+  commentId: string
+) => {
+  const { data } = await apiInstance.delete(
+    `/posts/${postId}/comments/${commentId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return data;
+};
+export const deleteReplyById = async (
+  token: string,
+  replyId: string,
+  commentId: string,
+  postId: string
+) => {
+  const { data } = await apiInstance.delete(
+    `/posts/${postId}/comments/${commentId}/replies/${replyId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return data;
+};

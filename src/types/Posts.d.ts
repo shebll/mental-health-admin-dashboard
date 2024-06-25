@@ -3,7 +3,7 @@ export type Post = {
   appUserId: string;
   commentsCount: number;
   content: string;
-  id: number;
+  id: string;
   isAnonymous: boolean;
   photoUrl: string | null;
   postPhotoUrl: string | null;

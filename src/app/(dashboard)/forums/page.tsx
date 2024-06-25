@@ -27,16 +27,6 @@ export default function Home() {
   return (
     <div className="container max-w-[600px] mx-auto p-0 flex flex-col gap-4">
       <PageTitle title="Forums" />
-      {/* <SearchFilter
-        onSearch={(val) => {
-          setQuery(val);
-          setPage(1);
-        }}
-        onFilter={(val) => {
-          setIsConfusionFilter(val);
-          setPage(1);
-        }}
-      /> */}
       <div className="flex flex-col gap-4">
         {posts.map((post, index) => (
           <PostCard key={post.id} post={post} />

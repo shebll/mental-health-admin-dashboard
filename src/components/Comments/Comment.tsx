@@ -3,14 +3,18 @@ import Image from "next/image";
 import { useReplies } from "@/hooks/useComments";
 import { CommentType } from "@/types/Posts";
 import Reply from "./Reply";
-import { Button } from "../ui/button";
+import { timeAgo } from "@/lib/timeAgoFunction";
+import { Trash } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { deleteCommentById } from "@/lib/api";
 
 interface CommentProps {
   comment: CommentType;
-  postId: number;
+  postId: string;
 }
 
 const Comment: React.FC<CommentProps> = ({ comment, postId }) => {
+  const { token } = useAuth();
   const { replies, loading } = useReplies(postId, comment.id);
   const [showReplies, setShowReplies] = useState<boolean>(false);
 
@@ -28,12 +32,21 @@ const Comment: React.FC<CommentProps> = ({ comment, postId }) => {
                 className="w-10 h-10 rounded-full"
               />
             )}
-
-            <p className="font-semibold">{comment.username}</p>
+            <div className="flex flex-col ">
+              <p className="font-semibold">{comment.username}</p>
+              <p className="text-sm text-primary/70">
+                {timeAgo(comment.commentedAt)}
+              </p>
+            </div>
           </div>
-          <Button size={"sm"} variant={"destructive"} className="text-end">
-            Delete Comment
-          </Button>
+          <div
+            onClick={() =>
+              token && deleteCommentById(token, postId, comment.id.toString())
+            }
+            className=""
+          >
+            <Trash />
+          </div>
         </div>
         <p className="ml-10">{comment.content}</p>
       </div>
@@ -51,7 +64,14 @@ const Comment: React.FC<CommentProps> = ({ comment, postId }) => {
             {loading ? (
               <div>Loading replies...</div>
             ) : (
-              replies.map((reply) => <Reply key={reply.id} reply={reply} />)
+              replies.map((reply) => (
+                <Reply
+                  key={reply.id}
+                  reply={reply}
+                  postId={postId}
+                  commentId={comment.id.toString()}
+                />
+              ))
             )}
           </div>
         )}

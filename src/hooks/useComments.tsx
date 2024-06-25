@@ -1,7 +1,7 @@
 import { CommentType, ReplyType } from "@/types/Posts";
 import { useState, useEffect } from "react";
 
-export const useComments = (postId: number) => {
+export const useComments = (postId: string) => {
   const [comments, setComments] = useState<CommentType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -18,7 +18,7 @@ export const useComments = (postId: number) => {
   return { comments, loading };
 };
 
-export const useReplies = (postId: number, commentId: number) => {
+export const useReplies = (postId: string, commentId: number) => {
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

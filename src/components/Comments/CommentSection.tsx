@@ -11,7 +11,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
   const [showAllComments, setShowAllComments] = useState<boolean>(false);
 
   if (loading) {
-    return <div>Loading comments...</div>; // Replace with skeleton component if needed
+    return <div>Loading comments...</div>;
   }
 
   return (
@@ -21,6 +21,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ post }) => {
         .map((comment) => (
           <Comment key={comment.id} comment={comment} postId={post.id} />
         ))}
+      {comments.length == 0 && <p className="text-sm">No Comment </p>}
       {comments.length > 1 && (
         <button
           onClick={() => setShowAllComments(!showAllComments)}
