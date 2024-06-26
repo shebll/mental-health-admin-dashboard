@@ -17,8 +17,10 @@ import {
 } from "@/components/ui/select";
 import { egyptianCities } from "@/data/egyptianCities";
 import { specializations } from "@/data/specializations";
+import { Filter } from "lucide-react";
 
 const DoctorsPage = () => {
+  const [filterPopUp, setFilterPopUp] = useState(false);
   const { token } = useAuth();
   const [doctors, setDoctors] = useState<DoctorType[]>([]);
   const { ref, inView } = useInView({ threshold: 1.0 });
@@ -133,159 +135,185 @@ const DoctorsPage = () => {
   const handleSubmit = () => {
     handleFilterChange(filters);
   };
-
+  const handleDelete = (doctorId: string) => {
+    setDoctors([...doctors.filter((doctor) => doctor.id !== doctorId)]);
+  };
   return (
-    <div className="container mx-auto p-4 max-w-[820px]">
+    <div className="container mx-auto p-4 max-w-[900px]">
       <h1 className="text-2xl font-bold mb-4">Doctors</h1>
-      <div className="py-10 flex flex-col gap-6 ">
-        <h1 className="text-2xl font-semibold">Filter</h1>
-        <div className="grid grid-cols-1 gap-2">
-          <div className="">
-            <label htmlFor="DoctorName">Doctor Name</label>
-            <Input
-              id="DoctorName"
-              type="text"
-              name="Name"
-              placeholder="Doctor Name"
-              value={filters.Name}
-              onChange={handleChange}
-              className="p-2 border rounded"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="Specialization">Specialization</label>
-            <Select
-              name="Specialization"
-              value={filters.Specialization}
-              onValueChange={handleSpecializationChange}
-            >
-              <SelectTrigger className="p-2 border rounded">
-                <SelectValue placeholder="All Specializations" />
-              </SelectTrigger>
-              <SelectContent>
-                {specializations.map((Specialization, idx) => (
-                  <SelectItem key={idx} value={Specialization.value}>
-                    {Specialization.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex flex-row gap-4">
-            <label>
-              <input
-                type="radio"
-                name="Gender"
-                value=""
-                checked={filters.Gender === ""}
-                onChange={handleChange}
-              />
-              All
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="Gender"
-                value="male"
-                checked={filters.Gender === "male"}
-                onChange={handleChange}
-              />
-              Male
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="Gender"
-                value="female"
-                checked={filters.Gender === "female"}
-                onChange={handleChange}
-              />
-              Female
-            </label>
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="City">City</label>
-            <Select
-              name="City"
-              value={filters.City}
-              onValueChange={handleCityChange}
-            >
-              <SelectTrigger className="p-2 border rounded">
-                <SelectValue placeholder="All Cities" />
-              </SelectTrigger>
-              <SelectContent>
-                {egyptianCities.map((city, idx) => (
-                  <SelectItem key={idx} value={city.value}>
-                    {city.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Slider
-              value={[filters.MinFees, filters.MaxFees]}
-              onChange={handleFeesChange}
-              valueLabelDisplay="auto"
-              min={0}
-              max={1000}
-            />
-            <div className="fees-inputs">
-              <label htmlFor="MinFees">MinFees</label>
+      <span
+        className={`fixed md:hidden top-6 right-10`}
+        onClick={() => setFilterPopUp((prev) => !prev)}
+      >
+        <Filter />
+      </span>
+      <span
+        className={` md:hidden ${
+          filterPopUp ? "fixed" : "hidden"
+        } inset-0 bg-black/20 backdrop-blur-sm h-screen w-full`}
+        onClick={() => setFilterPopUp((prev) => !prev)}
+      />
+      <div className="flex flex-row-reverse gap-6">
+        <div
+          className={`flex flex-col gap-6 p-4 border rounded-md h-fit fixed md:sticky top-20 md:top-10 bg-background transition-all ${
+            filterPopUp ? "right-[5%]" : " right-[-100%]"
+          } `}
+        >
+          <h1 className="text-2xl font-semibold">Filter</h1>
+          <div className="grid grid-cols-1 gap-2">
+            <div className="">
+              <label htmlFor="DoctorName">Doctor Name</label>
               <Input
-                id="MinFees"
-                type="number"
-                name="MinFees"
-                placeholder="Min Fees"
-                value={filters.MinFees}
+                id="DoctorName"
+                type="text"
+                name="Name"
+                placeholder="Doctor Name"
+                value={filters.Name}
                 onChange={handleChange}
-              />
-              <label htmlFor="MaxFees">MaxFees</label>
-              <Input
-                id="MaxFees"
-                type="number"
-                name="MaxFees"
-                placeholder="Max Fees"
-                value={filters.MaxFees}
-                onChange={handleChange}
+                className="p-2 border rounded"
               />
             </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="Specialization">Specialization</label>
+              <Select
+                name="Specialization"
+                value={filters.Specialization}
+                onValueChange={handleSpecializationChange}
+              >
+                <SelectTrigger className="p-2 border rounded">
+                  <SelectValue placeholder="All Specializations" />
+                </SelectTrigger>
+                <SelectContent>
+                  {specializations.map((Specialization, idx) => (
+                    <SelectItem key={idx} value={Specialization.value}>
+                      {Specialization.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-row gap-4">
+              <label>
+                <input
+                  type="radio"
+                  name="Gender"
+                  value=""
+                  checked={filters.Gender === ""}
+                  onChange={handleChange}
+                />
+                All
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="Gender"
+                  value="male"
+                  checked={filters.Gender === "male"}
+                  onChange={handleChange}
+                />
+                Male
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="Gender"
+                  value="female"
+                  checked={filters.Gender === "female"}
+                  onChange={handleChange}
+                />
+                Female
+              </label>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="City">City</label>
+              <Select
+                name="City"
+                value={filters.City}
+                onValueChange={handleCityChange}
+              >
+                <SelectTrigger className="p-2 border rounded">
+                  <SelectValue placeholder="All Cities" />
+                </SelectTrigger>
+                <SelectContent>
+                  {egyptianCities.map((city, idx) => (
+                    <SelectItem key={idx} value={city.value}>
+                      {city.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="rangeFees">Range Fees</label>
+              <Slider
+                name="rangeFees"
+                value={[filters.MinFees, filters.MaxFees]}
+                onChange={handleFeesChange}
+                valueLabelDisplay="auto"
+                min={0}
+                max={1000}
+              />
+              <div className="fees-inputs">
+                <label htmlFor="MinFees">MinFees</label>
+                <Input
+                  id="MinFees"
+                  type="number"
+                  name="MinFees"
+                  placeholder="Min Fees"
+                  value={filters.MinFees}
+                  onChange={handleChange}
+                />
+                <label htmlFor="MaxFees">MaxFees</label>
+                <Input
+                  id="MaxFees"
+                  type="number"
+                  name="MaxFees"
+                  placeholder="Max Fees"
+                  value={filters.MaxFees}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <button
+              className="mt-4 p-2 bg-blue-500 text-white rounded"
+              onClick={handleSubmit}
+            >
+              Apply Filters
+            </button>
+            <button
+              className="mt-4 p-2 bg-red-500 text-white rounded"
+              onClick={resetFilters}
+            >
+              Reset Filters
+            </button>
           </div>
-          <button
-            className="mt-4 p-2 bg-blue-500 text-white rounded"
-            onClick={handleSubmit}
-          >
-            Apply Filters
-          </button>
-          <button
-            className="mt-4 p-2 bg-red-500 text-white rounded"
-            onClick={resetFilters}
-          >
-            Reset Filters
-          </button>
+        </div>
+        <div className="flex-1">
+          <div className="grid grid-cols-1 gap-4">
+            {doctors.map((doctor) => (
+              <DoctorCard
+                onDelete={handleDelete}
+                key={doctor.id}
+                doctor={doctor}
+                onClick={() => setSelectedDoctor(doctor)}
+              />
+            ))}
+          </div>
+          {loading && (
+            <>
+              <DoctorLoading />
+              <DoctorLoading />
+              <DoctorLoading />
+              <DoctorLoading />
+              <DoctorLoading />
+            </>
+          )}
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4">
-        {doctors.map((doctor) => (
-          <DoctorCard
-            key={doctor.id}
-            doctor={doctor}
-            onClick={() => setSelectedDoctor(doctor)}
-          />
-        ))}
-      </div>
-      {loading && (
-        <>
-          <DoctorLoading />
-          <DoctorLoading />
-          <DoctorLoading />
-          <DoctorLoading />
-          <DoctorLoading />
-        </>
-      )}
       <div ref={ref} />
       {selectedDoctor && (
         <DoctorDetails
+          onDelete={handleDelete}
           doctor={selectedDoctor}
           onClose={() => setSelectedDoctor(null)}
         />
@@ -298,7 +326,7 @@ export default DoctorsPage;
 
 const DoctorLoading = () => {
   return (
-    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 mt-4 p-4 rounded-md ">
+    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 mb-4 p-4 rounded-md ">
       <div className="flex flex-col md:flex-row  justify-start gap-20 items-start w-full">
         <div className="flex flex-col gap-4 w-full">
           <span className="w-[40%] h-4 bg-secondary/50 rounded-lg animate-pulse"></span>

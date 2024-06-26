@@ -3,8 +3,9 @@ import { deleteReplyById } from "@/lib/api";
 import { ReplyType } from "@/types/Posts";
 import { Trash } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
+import ConfirmationPopup from "../layout/ConfirmationPopup";
 
 interface ReplyProps {
   reply: ReplyType;
@@ -20,7 +21,7 @@ const Reply: React.FC<ReplyProps> = ({
   onDelete,
 }) => {
   const { token } = useAuth();
-
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
   const handleDelete = async () => {
     if (token) {
       const response = await deleteReplyById(
@@ -38,28 +39,43 @@ const Reply: React.FC<ReplyProps> = ({
     }
   };
   return (
-    <div className="reply pl-8 flex justify-between">
-      <div className="flex items-center gap-2">
-        <div className="">
-          {reply.photoUrl && (
-            <Image
-              width={40}
-              height={40}
-              src={reply.photoUrl}
-              alt={reply.username}
-              className="w-8 h-8 rounded-full"
-            />
-          )}
+    <>
+      <ConfirmationPopup
+        isOpen={confirmDelete}
+        message={`All the information for this post will be deleted.`}
+        confirmText={`Delete/Comment`}
+        onCancel={() => setConfirmDelete(false)}
+        onConfirm={handleDelete}
+      />
+      <div className="reply pl-8 flex justify-between">
+        <div className="flex items-center gap-2">
+          <div className="">
+            {reply.photoUrl && (
+              <Image
+                width={40}
+                height={40}
+                src={reply.photoUrl}
+                alt={reply.username}
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+          </div>
+          <div>
+            <p className="font-semibold">{reply.username}</p>
+            <p>{reply.content}</p>
+          </div>
         </div>
-        <div>
-          <p className="font-semibold">{reply.username}</p>
-          <p>{reply.content}</p>
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setConfirmDelete(true);
+          }}
+          className="cursor-pointer"
+        >
+          <Trash />
         </div>
       </div>
-      <div onClick={handleDelete} className="cursor-pointer max-w-sm">
-        <Trash size={18} />
-      </div>
-    </div>
+    </>
   );
 };
 

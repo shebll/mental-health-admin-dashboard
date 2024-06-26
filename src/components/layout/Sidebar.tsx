@@ -19,26 +19,26 @@ export function Sidebar() {
     <>
       <Menu
         size={30}
-        className="cursor-pointer absolute left-[22px] top-[18px] lg:hidden z-[2]"
+        className="cursor-pointer absolute left-[22px] top-[18px] xl:hidden z-[2]"
         onClick={() => setToggle((prev) => !prev)}
       />
       <span
         onClick={() => setToggle((prev) => !prev)}
         className={`absolute inset-0 w-screen h-screen bg-black/10 backdrop-blur-sm cursor-pointer 
-          ${toggle ? "block" : "hidden"} lg:hidden z-[2]`}
+          ${toggle ? "block" : "hidden"} xl:hidden z-[2]`}
       />
       <div
-        className={`absolute z-[2] lg:relative h-screen transition-all duration-500 ease-in-out shadow-xl bg-secondary px-2 py-10 w-[300px] flex flex-col justify-between ${
+        className={`absolute z-[2] xl:relative h-screen transition-all duration-500 ease-in-out shadow-xl bg-secondary px-2 py-10 w-[300px] flex flex-col justify-between ${
           toggle ? "left-[-0%]" : "left-[-100%] "
-        } lg:left-[0%]`}
+        } xl:left-[0%]`}
       >
         <X
           size={30}
-          className="cursor-pointer absolute right-[22px] top-[24px] lg:hidden"
+          className="cursor-pointer absolute right-[22px] top-[24px] xl:hidden"
           onClick={() => setToggle((prev) => !prev)}
         />
         <div className="flex flex-col gap-20 ">
-          <div className="flex items-center px-4 py-2 border-1 rounded-lg">
+          <div className="flex items-center px-4 py-2 border-1 rounded-xl">
             <Image
               width={60}
               height={60}

@@ -9,9 +9,11 @@ import { useAuth } from "@/context/AuthContext";
 import UserCard from "@/components/Users/UserCard";
 import UserDetails from "@/components/Users/UserDetails";
 import { UserType } from "@/types/UserType";
+import { Filter } from "lucide-react";
 
 const UsersPage = () => {
   const { token } = useAuth();
+  const [filterPopUp, setFilterPopUp] = useState(false);
   const [users, setUsers] = useState<UserType[]>([]);
   const { ref, inView } = useInView({ threshold: 1.0 });
   const [loading, setLoading] = useState(true);
@@ -88,94 +90,120 @@ const UsersPage = () => {
   const handleSubmit = () => {
     handleFilterChange(filters);
   };
+  const handleDelete = (userId: string) => {
+    // console.log(users.filter((user) => user.id !== userId));
+    setUsers([...users.filter((user) => user.id !== userId)]);
+  };
 
   return (
-    <div className="container mx-auto p-4 max-w-[820px]">
+    <div className="container mx-auto p-4 max-w-[900px]">
       <h1 className="text-2xl font-bold mb-4">Users</h1>
-      <div className="py-10 flex flex-col gap-6 ">
-        <h1 className="text-2xl font-semibold">Filter</h1>
-        <div className="grid grid-cols-1 gap-2">
-          <div className="">
-            <label htmlFor="UserName">User Name</label>
-            <Input
-              id="UserName"
-              type="text"
-              name="Name"
-              placeholder="User Name"
-              value={filters.Name}
-              onChange={handleChange}
-              className="p-2 border rounded"
-            />
+      <span
+        className={`fixed md:hidden top-6 right-10`}
+        onClick={() => setFilterPopUp((prev) => !prev)}
+      >
+        <Filter />
+      </span>
+      <span
+        className={` md:hidden ${
+          filterPopUp ? "fixed" : "hidden"
+        } inset-0 bg-black/20 backdrop-blur-sm h-screen w-full`}
+        onClick={() => setFilterPopUp((prev) => !prev)}
+      />
+      <div className="flex flex-row-reverse gap-6">
+        <div
+          className={`flex flex-col gap-6 p-4 border rounded-md h-fit fixed md:sticky top-20 md:top-10 bg-background transition-all ${
+            filterPopUp ? "right-[5%]" : " right-[-100%]"
+          } `}
+        >
+          <h1 className="text-2xl font-semibold">Filter</h1>
+          <div className="grid grid-cols-1 gap-2">
+            <div className="">
+              <label htmlFor="UserName">User Name</label>
+              <Input
+                id="UserName"
+                type="text"
+                name="Name"
+                placeholder="User Name"
+                value={filters.Name}
+                onChange={handleChange}
+                className="p-2 border rounded"
+              />
+            </div>
+            <div className="flex flex-row gap-4">
+              <label htmlFor="">Gender:</label>
+              <label>
+                <input
+                  type="radio"
+                  name="Gender"
+                  value=""
+                  checked={filters.Gender === ""}
+                  onChange={handleChange}
+                />
+                All
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="Gender"
+                  value="male"
+                  checked={filters.Gender === "male"}
+                  onChange={handleChange}
+                />
+                Male
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="Gender"
+                  value="female"
+                  checked={filters.Gender === "female"}
+                  onChange={handleChange}
+                />
+                Female
+              </label>
+            </div>
+            <button
+              className="mt-4 p-2 bg-blue-500 text-white rounded"
+              onClick={handleSubmit}
+            >
+              Apply Filters
+            </button>
+            <button
+              className="mt-4 p-2 bg-red-500 text-white rounded"
+              onClick={resetFilters}
+            >
+              Reset Filters
+            </button>
           </div>
-          <div className="flex flex-row gap-4">
-            <label htmlFor="">Gender:</label>
-            <label>
-              <input
-                type="radio"
-                name="Gender"
-                value=""
-                checked={filters.Gender === ""}
-                onChange={handleChange}
+        </div>
+        <div className="flex-1">
+          <div className="grid grid-cols-1 gap-4">
+            {users.map((user) => (
+              <UserCard
+                onDelete={handleDelete}
+                key={user.id}
+                User={user}
+                onClick={() => setSelectedUser(user)}
               />
-              All
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="Gender"
-                value="male"
-                checked={filters.Gender === "male"}
-                onChange={handleChange}
-              />
-              Male
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="Gender"
-                value="female"
-                checked={filters.Gender === "female"}
-                onChange={handleChange}
-              />
-              Female
-            </label>
+            ))}
           </div>
-          <button
-            className="mt-4 p-2 bg-blue-500 text-white rounded"
-            onClick={handleSubmit}
-          >
-            Apply Filters
-          </button>
-          <button
-            className="mt-4 p-2 bg-red-500 text-white rounded"
-            onClick={resetFilters}
-          >
-            Reset Filters
-          </button>
+          {loading && (
+            <>
+              <UserLoading />
+              <UserLoading />
+              <UserLoading />
+              <UserLoading />
+              <UserLoading />
+            </>
+          )}
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4">
-        {users.map((user) => (
-          <UserCard
-            key={user.id}
-            User={user}
-            onClick={() => setSelectedUser(user)}
-          />
-        ))}
-      </div>
-      {loading && (
-        <>
-          <UserLoading />
-          <UserLoading />
-          <UserLoading />
-          <UserLoading />
-          <UserLoading />
-        </>
-      )}
       <div ref={ref} />
       {selectedUser && (
         <UserDetails
           user={selectedUser}
+          onDelete={handleDelete}
           onClose={() => setSelectedUser(null)}
         />
       )}
@@ -187,7 +215,7 @@ export default UsersPage;
 
 const UserLoading = () => {
   return (
-    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 mt-4 p-4 rounded-md ">
+    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 mb-4 p-4 rounded-md ">
       <div className="flex flex-col md:flex-row  justify-start gap-20 items-start w-full">
         <div className="flex flex-col gap-4 w-full">
           <div className="flex items-start gap-6">

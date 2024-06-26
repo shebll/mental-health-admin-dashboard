@@ -3,6 +3,7 @@ import axios from "axios";
 
 const apiInstance = axios.create({
   baseURL: "https://nexus-api-h3ik.onrender.com/api",
+  headers: {},
 });
 
 export const fetchAppointments = async (
@@ -65,13 +66,10 @@ export const fetchDoctorById = async (token: string, id: string) => {
   return data;
 };
 export const deleteDoctorById = async (token: string, id: string) => {
-  const { data } = await apiInstance.delete(`/doctors`, {
+  const { data } = await apiInstance.delete(`/doctors?userId=${id}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-    },
-    data: {
-      doctorId: id,
     },
   });
   return data;
@@ -107,13 +105,10 @@ export const fetchUserById = async (token: string, id: string) => {
   return data;
 };
 export const deleteUserById = async (token: string, id: string) => {
-  const { data } = await apiInstance.delete(`/users`, {
+  const { data } = await apiInstance.delete(`/users?userId=${id}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-    },
-    data: {
-      userId: id,
     },
   });
   return data;
