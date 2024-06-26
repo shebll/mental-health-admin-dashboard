@@ -30,7 +30,7 @@ const DoctorsPage = () => {
   const searchParams = useSearchParams();
 
   const [page, setPage] = useState(1);
-  const pageSize = 6;
+  const pageSize = 20;
   const [selectedDoctor, setSelectedDoctor] = useState<DoctorType | null>(null);
 
   const getFiltersFromURL = () => {
@@ -288,8 +288,9 @@ const DoctorsPage = () => {
             </button>
           </div>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 flex flex-col gap-4">
           <div className="grid grid-cols-1 gap-4">
+            {}
             {doctors.map((doctor) => (
               <DoctorCard
                 onDelete={handleDelete}
@@ -298,15 +299,16 @@ const DoctorsPage = () => {
                 onClick={() => setSelectedDoctor(doctor)}
               />
             ))}
+            {doctors.length == 0 && !loading && <p>No Doctors Found</p>}
           </div>
           {loading && (
-            <>
+            <div className="flex flex-col gap-4">
               <DoctorLoading />
               <DoctorLoading />
               <DoctorLoading />
               <DoctorLoading />
               <DoctorLoading />
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -326,7 +328,7 @@ export default DoctorsPage;
 
 const DoctorLoading = () => {
   return (
-    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 mb-4 p-4 rounded-md ">
+    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50  p-4 rounded-md ">
       <div className="flex flex-col md:flex-row  justify-start gap-20 items-start w-full">
         <div className="flex flex-col gap-4 w-full">
           <span className="w-[40%] h-4 bg-secondary/50 rounded-lg animate-pulse"></span>

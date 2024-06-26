@@ -24,7 +24,7 @@ const AppointmentCard: FC<AppointmentCardProps> = ({
               <Image
                 src={
                   appointment.clientPhotoUrl
-                    ? appointment.clientPhotoUrl
+                    ? `/${appointment.clientPhotoUrl}`
                     : "/user.png"
                 }
                 alt="clientPhotoUrl"
@@ -43,12 +43,12 @@ const AppointmentCard: FC<AppointmentCardProps> = ({
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <h1>Doctor:</h1>
+            <h1>Doctor: </h1>
             <div className="flex items-start gap-6">
               <Image
                 src={
                   appointment.doctorPhotoUrl
-                    ? appointment.doctorPhotoUrl
+                    ? `/${appointment.doctorPhotoUrl}`
                     : "/doctor.png"
                 }
                 alt="clientPhotoUrl"

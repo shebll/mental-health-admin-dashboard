@@ -22,7 +22,7 @@ const UsersPage = () => {
   const searchParams = useSearchParams();
 
   const [page, setPage] = useState(1);
-  const pageSize = 6;
+  const pageSize = 20;
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
   const getFiltersFromURL = () => {
@@ -177,7 +177,7 @@ const UsersPage = () => {
             </button>
           </div>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 flex flex-col gap-4">
           <div className="grid grid-cols-1 gap-4">
             {users.map((user) => (
               <UserCard
@@ -187,15 +187,16 @@ const UsersPage = () => {
                 onClick={() => setSelectedUser(user)}
               />
             ))}
+            {users.length == 0 && !loading && <p>No Doctors Found</p>}
           </div>
           {loading && (
-            <>
+            <div className="flex flex-col gap-4">
               <UserLoading />
               <UserLoading />
               <UserLoading />
               <UserLoading />
               <UserLoading />
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -215,7 +216,7 @@ export default UsersPage;
 
 const UserLoading = () => {
   return (
-    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 mb-4 p-4 rounded-md ">
+    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50  p-4 rounded-md ">
       <div className="flex flex-col md:flex-row  justify-start gap-20 items-start w-full">
         <div className="flex flex-col gap-4 w-full">
           <div className="flex items-start gap-6">

@@ -15,8 +15,10 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
+import { Filter } from "lucide-react";
 const AppointmentsPage = () => {
   const { token } = useAuth();
+  const [filterPopUp, setFilterPopUp] = useState(false);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const { ref, inView } = useInView({ threshold: 1.0 });
   const [loading, setLoading] = useState(true);
@@ -25,7 +27,7 @@ const AppointmentsPage = () => {
   const searchParams = useSearchParams();
 
   const [page, setPage] = useState(1);
-  const pageSize = 6;
+  const pageSize = 20;
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
 
@@ -119,103 +121,126 @@ const AppointmentsPage = () => {
 
   console.log(filters.Status);
   return (
-    <div className="container mx-auto p-4 max-w-[820px]">
+    <div className="container mx-auto p-4 max-w-[1200px]">
       <h1 className="text-2xl font-bold mb-4">Appointments</h1>
-      <div className="py-10 flex flex-col gap-6 ">
-        <h1 className="text-2xl font-semibold">Filter</h1>
-        <div className="grid grid-cols-1 gap-2">
-          <div className="">
-            <label htmlFor="DoctorId">DoctorId</label>
-            <Input
-              id="DoctorId"
-              type="text"
-              name="DoctorId"
-              placeholder="Doctor ID"
-              value={filters.DoctorId}
-              onChange={handleChange}
-              className="p-2 border rounded"
-            />
+      <span
+        className={`fixed md:hidden top-6 right-10`}
+        onClick={() => setFilterPopUp((prev) => !prev)}
+      >
+        <Filter />
+      </span>
+      <span
+        className={` md:hidden ${
+          filterPopUp ? "fixed" : "hidden"
+        } inset-0 bg-black/20 backdrop-blur-sm h-screen w-full`}
+        onClick={() => setFilterPopUp((prev) => !prev)}
+      />
+      <div className="flex flex-row-reverse gap-6">
+        <div
+          className={`flex flex-col gap-6 p-4 border rounded-md h-fit fixed md:sticky top-20 md:top-10 bg-background transition-all ${
+            filterPopUp ? "right-[5%]" : " right-[-100%]"
+          } `}
+        >
+          <h1 className="text-2xl font-semibold">Filter</h1>
+          <div className="grid grid-cols-1 gap-2">
+            <div className="">
+              <label htmlFor="DoctorId">DoctorId</label>
+              <Input
+                id="DoctorId"
+                type="text"
+                name="DoctorId"
+                placeholder="Doctor ID"
+                value={filters.DoctorId}
+                onChange={handleChange}
+                className="p-2 border rounded"
+              />
+            </div>
+            <div className="">
+              <label htmlFor="UserId">UserId</label>
+              <Input
+                id="UserId"
+                type="text"
+                name="UserId"
+                placeholder="User ID"
+                value={filters.UserId}
+                onChange={handleChange}
+                className="p-2 border rounded"
+              />
+            </div>
+            <div className="">
+              <label htmlFor="StartDate">StartDate</label>
+              <Input
+                id="StartDate"
+                type="date"
+                name="StartDate"
+                value={filters.StartDate}
+                onChange={handleChange}
+                className="p-2 border rounded"
+              />
+            </div>
+            <div className="">
+              <label htmlFor="EndDate">EndDate</label>
+              <Input
+                type="date"
+                name="EndDate"
+                value={filters.EndDate}
+                onChange={handleChange}
+                className="p-2 border rounded"
+              />
+            </div>
+            <div className="">
+              <label htmlFor="Status">Status</label>
+              <Select value={filters.Status} onValueChange={handleStatusChange}>
+                <SelectTrigger className="p-2 border rounded">
+                  <SelectValue placeholder="All Statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value=" ">All Statuses</SelectItem>
+                  <SelectItem value="Confirmed">Confirmed</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Cancelled">Cancelled</SelectItem>
+                  <SelectItem value="Rejected">Rejected</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <button
+              className="mt-4 p-2 bg-blue-500 text-white rounded"
+              onClick={handleSubmit}
+            >
+              Apply Filters
+            </button>
+            <button
+              className="mt-4 p-2 bg-red-500 text-white rounded"
+              onClick={resetFilters}
+            >
+              Rest Filters
+            </button>
           </div>
-          <div className="">
-            <label htmlFor="UserId">UserId</label>
-            <Input
-              id="UserId"
-              type="text"
-              name="UserId"
-              placeholder="User ID"
-              value={filters.UserId}
-              onChange={handleChange}
-              className="p-2 border rounded"
-            />
+        </div>
+        <div className="flex-1 flex flex-col gap-4">
+          <div className="grid grid-cols-1 gap-4">
+            {appointments.map((appointment) => (
+              <AppointmentCard
+                key={appointment.id}
+                appointment={appointment}
+                onClick={() => setSelectedAppointment(appointment)}
+              />
+            ))}
+            {appointments.length == 0 && !loading && (
+              <p>No Appointments Found</p>
+            )}
           </div>
-          <div className="">
-            <label htmlFor="StartDate">StartDate</label>
-            <Input
-              id="StartDate"
-              type="date"
-              name="StartDate"
-              value={filters.StartDate}
-              onChange={handleChange}
-              className="p-2 border rounded"
-            />
-          </div>
-          <div className="">
-            <label htmlFor="EndDate">EndDate</label>
-            <Input
-              type="date"
-              name="EndDate"
-              value={filters.EndDate}
-              onChange={handleChange}
-              className="p-2 border rounded"
-            />
-          </div>
-          <div className="">
-            <label htmlFor="Status">Status</label>
-            <Select value={filters.Status} onValueChange={handleStatusChange}>
-              <SelectTrigger className="p-2 border rounded">
-                <SelectValue placeholder="All Statuses" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value=" ">All Statuses</SelectItem>
-                <SelectItem value="Confirmed">Confirmed</SelectItem>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="Cancelled">Cancelled</SelectItem>
-                <SelectItem value="Rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <button
-            className="mt-4 p-2 bg-blue-500 text-white rounded"
-            onClick={handleSubmit}
-          >
-            Apply Filters
-          </button>
-          <button
-            className="mt-4 p-2 bg-red-500 text-white rounded"
-            onClick={resetFilters}
-          >
-            Rest Filters
-          </button>
+          {loading && (
+            <div className="flex flex-col gap-4">
+              <AppointmentLoading />
+              <AppointmentLoading />
+              <AppointmentLoading />
+              <AppointmentLoading />
+              <AppointmentLoading />
+            </div>
+          )}
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4">
-        {appointments.map((appointment) => (
-          <AppointmentCard
-            key={appointment.id}
-            appointment={appointment}
-            onClick={() => setSelectedAppointment(appointment)}
-          />
-        ))}
-      </div>
-      {loading && (
-        <>
-          <AppointmentLoading />
-          <AppointmentLoading />
-          <AppointmentLoading />
-          <AppointmentLoading />
-          <AppointmentLoading />
-        </>
-      )}
       <div ref={ref} />
       {selectedAppointment && (
         <AppointmentDetails
@@ -231,7 +256,7 @@ export default AppointmentsPage;
 
 const AppointmentLoading = () => {
   return (
-    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 mt-4 p-4 rounded-md ">
+    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 p-4 rounded-md ">
       <div className="flex flex-col md:flex-row  justify-start gap-20 items-start w-full">
         <div className="flex flex-col gap-4 w-full">
           <span className="w-[40%] h-4 bg-secondary/50 rounded-lg animate-pulse"></span>

@@ -35,7 +35,7 @@ const PostCard = ({ post, onDelete }: PostCardProps) => {
       <ConfirmationPopup
         isOpen={confirmDelete}
         message={`All the information for this post will be deleted.`}
-        confirmText={`Delete/Post}`}
+        confirmText={`Delete/Post`}
         onCancel={() => setConfirmDelete(false)}
         onConfirm={handleDelete}
       />
