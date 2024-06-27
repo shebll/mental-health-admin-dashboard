@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/select";
 import { egyptianCities } from "@/data/egyptianCities";
 import { specializations } from "@/data/specializations";
-import { Filter } from "lucide-react";
+import { Filter, PlusCircleIcon } from "lucide-react";
+import Link from "next/link";
 
 const DoctorsPage = () => {
   const [filterPopUp, setFilterPopUp] = useState(false);
@@ -140,7 +141,15 @@ const DoctorsPage = () => {
   };
   return (
     <div className="container mx-auto p-4 max-w-[900px]">
-      <h1 className="text-2xl font-bold mb-4">Doctors</h1>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold mb-4">Doctors</h1>
+        <Link href="/doctors/add">
+          <button className="flex items-center p-2 text-sm bg-green-700 text-white rounded">
+            Add new doctor
+            <PlusCircleIcon className="ml-2" />
+          </button>
+        </Link>
+      </div>
       <span
         className={`fixed md:hidden top-6 right-10`}
         onClick={() => setFilterPopUp((prev) => !prev)}
@@ -290,7 +299,6 @@ const DoctorsPage = () => {
         </div>
         <div className="flex-1 flex flex-col gap-4">
           <div className="grid grid-cols-1 gap-4">
-            {}
             {doctors.map((doctor) => (
               <DoctorCard
                 onDelete={handleDelete}

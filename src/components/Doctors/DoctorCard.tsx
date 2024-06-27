@@ -1,6 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
 import { deleteDoctorById } from "@/lib/api";
-import { Trash } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import Image from "next/image";
 import { FC, useState } from "react";
 import { toast } from "sonner";
@@ -45,7 +45,13 @@ const DoctorCard: FC<DoctorCardProps> = ({ doctor, onClick, onDelete }) => {
               <h1>Doctor:</h1>
               <div className="flex items-start gap-6">
                 <Image
-                  src={"/doctor.png"}
+                  src={
+                    doctor.photoUrl
+                      ? doctor.photoUrl.startsWith("http://")
+                        ? doctor.photoUrl
+                        : "/doctor.png"
+                      : "/doctor.png"
+                  }
                   alt="doctor PhotoUrl"
                   width={100}
                   height={100}
@@ -61,14 +67,19 @@ const DoctorCard: FC<DoctorCardProps> = ({ doctor, onClick, onDelete }) => {
                 </div>
               </div>
             </div>
-            <div
-              onClick={(e) => {
-                e.stopPropagation();
-                setConfirmDelete(true);
-              }}
-              className="cursor-pointer"
-            >
-              <Trash />
+            <div className="flex gap-2">
+              <div className="cursor-pointer">
+                <Edit />
+              </div>
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setConfirmDelete(true);
+                }}
+                className="cursor-pointer"
+              >
+                <Trash />
+              </div>
             </div>
           </div>
           <div className="flex flex-col gap-2 items-start">

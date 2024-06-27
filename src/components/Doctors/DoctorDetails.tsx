@@ -52,8 +52,14 @@ const DoctorDetails: FC<DoctorDetailsProps> = ({
               <h1>Doctor:</h1>
               <div className="flex items-start gap-6">
                 <Image
-                  src={doctor.photoUrl ? doctor.photoUrl : "/user.png"}
-                  alt="clientPhotoUrl"
+                  src={
+                    doctor.photoUrl
+                      ? doctor.photoUrl.startsWith("http://")
+                        ? doctor.photoUrl
+                        : "/doctor.png"
+                      : "/doctor.png"
+                  }
+                  alt="doctorPhotoUrl"
                   width={100}
                   height={100}
                   className=" rounded-full"
