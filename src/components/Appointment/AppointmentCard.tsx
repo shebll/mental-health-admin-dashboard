@@ -1,3 +1,4 @@
+import { formatDateTimeRange } from "@/lib/timeAgoFunction";
 import { Appointment } from "@/types/appointment";
 import Image from "next/image";
 import { FC } from "react";
@@ -17,14 +18,16 @@ const AppointmentCard: FC<AppointmentCardProps> = ({
       onClick={onClick}
     >
       <div className="flex flex-col justify-start items-start gap-14">
-        <div className="flex flex-col md:flex-row justify-start gap-y-8 gap-x-20 items-start">
+        <div className="w-full flex flex-col lg:flex-row justify-start gap-y-8 gap-x-10 items-start">
           <div className="flex flex-col gap-2">
             <h1>Patient:</h1>
             <div className="flex items-start gap-6">
               <Image
                 src={
                   appointment.clientPhotoUrl
-                    ? `/${appointment.clientPhotoUrl}`
+                    ? appointment.clientPhotoUrl.startsWith("http://")
+                      ? appointment.clientPhotoUrl
+                      : "/user.png"
                     : "/user.png"
                 }
                 alt="clientPhotoUrl"
@@ -48,10 +51,12 @@ const AppointmentCard: FC<AppointmentCardProps> = ({
               <Image
                 src={
                   appointment.doctorPhotoUrl
-                    ? `/${appointment.doctorPhotoUrl}`
+                    ? appointment.doctorPhotoUrl.startsWith("http://")
+                      ? appointment.doctorPhotoUrl
+                      : "/doctor.png"
                     : "/doctor.png"
                 }
-                alt="clientPhotoUrl"
+                alt="doctorPhotoUrl"
                 width={100}
                 height={100}
                 className=" rounded-full"
@@ -68,16 +73,15 @@ const AppointmentCard: FC<AppointmentCardProps> = ({
           </div>
         </div>
         <div className="flex flex-col gap-2 items-start">
-          <h2 className="text-lg font-bold">derails</h2>
+          <h2 className="text-lg font-bold">details</h2>
 
           <p>
-            Start Time:{" "}
-            <strong>{new Date(appointment.startTime).toLocaleString()} </strong>
+            Duration:{" "}
+            <strong>
+              {formatDateTimeRange(appointment.startTime, appointment.endTime)}{" "}
+            </strong>
           </p>
-          <p>
-            End Time:{" "}
-            <strong>{new Date(appointment.endTime).toLocaleString()} </strong>
-          </p>
+
           <p>
             Fees:<strong> ${appointment.fees} </strong>
           </p>

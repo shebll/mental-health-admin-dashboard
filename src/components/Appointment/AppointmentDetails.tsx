@@ -2,6 +2,7 @@ import { Appointment } from "@/types/appointment";
 import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { formatDateTimeRange } from "@/lib/timeAgoFunction";
 interface AppointmentDetailsProps {
   appointment: Appointment | null;
   onClose: () => void;
@@ -71,16 +72,15 @@ const AppointmentDetails: FC<AppointmentDetailsProps> = ({
           </div>
         </div>
         <div className="flex flex-col gap-2 items-start">
-          <h2 className="text-lg font-bold">derails</h2>
+          <h2 className="text-lg font-bold">details</h2>
 
           <p>
-            Start Time:{" "}
-            <strong>{new Date(appointment.startTime).toLocaleString()} </strong>
+            Duration:{" "}
+            <strong>
+              {formatDateTimeRange(appointment.startTime, appointment.endTime)}{" "}
+            </strong>
           </p>
-          <p>
-            End Time:{" "}
-            <strong>{new Date(appointment.endTime).toLocaleString()} </strong>
-          </p>
+
           <p>
             Fees:<strong> ${appointment.fees} </strong>
           </p>
