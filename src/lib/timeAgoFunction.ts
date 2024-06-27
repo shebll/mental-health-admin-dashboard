@@ -1,30 +1,48 @@
-export function timeAgo(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+export const timeAgo = (postDate: string | number | Date): string => {
+  const currentDate = new Date();
+  const offset = currentDate.getTimezoneOffset();
+  const local = new Date(currentDate.getTime() + offset * 60000);
 
-  let interval = Math.floor(seconds / 31536000);
-  if (interval > 1) {
-    return `${interval} years ago`;
+  const timeDifference = local.getTime() - new Date(postDate).getTime();
+
+  const seconds = Math.floor(timeDifference / 1000);
+  const minute = 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+  const month = day * 30;
+  const year = month * 12;
+
+  let durationString = "";
+
+  if (seconds < minute) {
+    if (seconds < 10) {
+      durationString = `just now`;
+    } else {
+      durationString = `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
+    }
+  } else if (seconds < hour) {
+    const minutes = Math.floor(seconds / minute);
+    durationString = `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+  } else if (seconds < day) {
+    const hours = Math.floor(seconds / hour);
+    durationString = `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+  } else if (seconds < month) {
+    const days = Math.floor(seconds / day);
+    durationString = `${days} day${days !== 1 ? "s" : ""} ago`;
+  } else if (seconds < year) {
+    const months = Math.floor(seconds / month);
+    durationString = `${months} month${months !== 1 ? "s" : ""} ago`;
+  } else {
+    const formattedDate = new Date(postDate).toLocaleDateString();
+    const formattedTime = new Date(postDate).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    durationString = `on ${formattedDate} at ${formattedTime}`;
   }
-  interval = Math.floor(seconds / 2592000);
-  if (interval > 1) {
-    return `${interval} months ago`;
-  }
-  interval = Math.floor(seconds / 86400);
-  if (interval > 1) {
-    return `${interval} days ago`;
-  }
-  interval = Math.floor(seconds / 3600);
-  if (interval > 1) {
-    return `${interval} hours ago`;
-  }
-  interval = Math.floor(seconds / 60);
-  if (interval > 1) {
-    return `${interval} minutes ago`;
-  }
-  return `${seconds} seconds ago`;
-}
+
+  return durationString;
+};
 
 export const formatDateTimeRange = (
   startTime: string | number | Date,
