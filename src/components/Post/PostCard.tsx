@@ -47,7 +47,11 @@ const PostCard = ({ post, onDelete }: PostCardProps) => {
                 <Image
                   width={40}
                   height={40}
-                  src={post.photoUrl}
+                  src={
+                    post.photoUrl.startsWith("http://")
+                      ? post.photoUrl
+                      : "/user.png"
+                  }
                   alt="User"
                   className="w-10 h-10 rounded-full mr-2"
                 />
@@ -76,11 +80,12 @@ const PostCard = ({ post, onDelete }: PostCardProps) => {
           </div>
           {post.postPhotoUrl && (
             <Image
-              width={240}
-              height={100}
+              width={540}
+              height={300}
+              quality={100}
               src={post.postPhotoUrl}
               alt="Post"
-              className="w-full h-48 object-cover mb-2 rounded"
+              className="w-full h-auto object-cover mb-2 rounded"
             />
           )}
           <h2 className="text-lg font-semibold">{post.title}</h2>

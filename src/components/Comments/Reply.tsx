@@ -54,7 +54,11 @@ const Reply: React.FC<ReplyProps> = ({
               <Image
                 width={40}
                 height={40}
-                src={reply.photoUrl}
+                src={
+                  reply.photoUrl.startsWith("http://")
+                    ? reply.photoUrl
+                    : "/user.png"
+                }
                 alt={reply.username}
                 className="w-8 h-8 rounded-full"
               />

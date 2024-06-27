@@ -59,7 +59,11 @@ const Comment: React.FC<CommentProps> = ({ comment, postId, onDelete }) => {
                 <Image
                   width={40}
                   height={40}
-                  src={comment.photoUrl}
+                  src={
+                    comment.photoUrl.startsWith("http://")
+                      ? comment.photoUrl
+                      : "/user.png"
+                  }
                   alt={comment.username}
                   className="w-10 h-10 rounded-full"
                 />
