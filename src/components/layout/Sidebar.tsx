@@ -43,7 +43,7 @@ export function Sidebar() {
               width={60}
               height={60}
               className="rounded-full"
-              src={user?.photoUrl as string}
+              src={user?.photoUrl || "/user.png"}
               alt={"user image"}
             />
             <div className="ml-3">

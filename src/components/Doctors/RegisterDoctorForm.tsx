@@ -63,13 +63,11 @@ const RegisterDoctorForm = () => {
       toast.success(response.data.message);
       router.push("/doctors");
     } catch (error: any) {
-      if (error.response.data.status === 409) {
-        toast.error(`${error.response.data.errors[0].description}`);
-      } else if (error.response && error.response.data.errors) {
-        const serverErrors = error.response.data.errors;
-        Object.keys(serverErrors).forEach((key) => {
-          toast.error(`${key}: ${serverErrors[key][0]}`);
-        });
+      if (error.response.data.status !== 201) {
+        for (const key in error.response.data.errors) {
+          toast.error(`${key}: ${error.response.data.errors[key]}`);
+        }
+        console.log(error.response.data.errors);
       } else {
         toast.error("An error occurred while registering the doctor");
       }
