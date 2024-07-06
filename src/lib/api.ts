@@ -6,6 +6,15 @@ const apiInstance = axios.create({
   headers: {},
 });
 
+export const fetchSummary = async (token: string) => {
+  const { data } = await apiInstance.get("/admins/summary", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return data;
+};
+
 export const fetchAppointments = async (
   page: number,
   pageSize: number,

@@ -307,7 +307,7 @@ const DoctorsPage = () => {
             />
           ))}
           {doctors.length == 0 && !loading && <p>No Doctors Found</p>}
-          {!loading && (
+          {loading && (
             <div className="flex flex-col gap-4">
               <DoctorLoading />
               <DoctorLoading />
