@@ -6,6 +6,7 @@ import { deleteDoctorById } from "@/lib/api";
 import { toast } from "sonner";
 import { Trash } from "lucide-react";
 import ConfirmationPopup from "../layout/ConfirmationPopup";
+import axios from "axios";
 interface DoctorDetailsProps {
   doctor: DoctorType | null;
   onDelete: (userId: string) => void;
@@ -23,12 +24,24 @@ const DoctorDetails: FC<DoctorDetailsProps> = ({
   if (!doctor) return null;
   const handleDelete = async () => {
     if (token) {
-      const response = await deleteDoctorById(token, doctor.id);
-      if (response) {
+      try {
+        const response = await deleteDoctorById(token, doctor.id);
         toast.success("Doctor Deleted Successfully");
         onDelete(doctor.id);
-      } else {
-        toast.error("Failed to delete doctor");
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          // if api provider given error
+          if (error.response) {
+            toast.error(`Error fetching data: ${error.response.data.message}`);
+          } else {
+            toast.error(`Error fetching data: ${error.message}`);
+          }
+        } else if (error instanceof Error) {
+          toast.error(`${error.message}`);
+        } else {
+          toast.error("Something went wrong try again");
+        }
+      } finally {
       }
     }
   };

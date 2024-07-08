@@ -5,6 +5,8 @@ import { Trash } from "lucide-react";
 import Image from "next/image";
 import { FC, useState } from "react";
 import ConfirmationPopup from "../layout/ConfirmationPopup";
+import { toast } from "sonner";
+import axios from "axios";
 
 interface UserCardProps {
   User: UserType;
@@ -18,9 +20,24 @@ const UserCard: FC<UserCardProps> = ({ User, onClick, onDelete }) => {
 
   const handleDelete = async () => {
     if (token) {
-      const response = await deleteUserById(token, User.id);
-      if (response) {
+      try {
+        const response = await deleteUserById(token, User.id);
+        toast.success("User Deleted Successfully");
         onDelete(User.id);
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          // if api provider given error
+          if (error.response) {
+            toast.error(`Error fetching data: ${error.response.data.message}`);
+          } else {
+            toast.error(`Error fetching data: ${error.message}`);
+          }
+        } else if (error instanceof Error) {
+          toast.error(`${error.message}`);
+        } else {
+          toast.error("Something went wrong try again");
+        }
+      } finally {
       }
     }
   };

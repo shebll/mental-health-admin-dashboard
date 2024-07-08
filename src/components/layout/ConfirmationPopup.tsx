@@ -25,7 +25,6 @@ const ConfirmationPopup: FC<ConfirmationPopupProps> = ({
     setIsLoading(true);
     try {
       await onConfirm();
-      toast.success("Operation successful");
     } catch (error) {
       toast.error("Operation failed");
     } finally {

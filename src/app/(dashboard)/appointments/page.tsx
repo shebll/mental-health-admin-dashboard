@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { Filter } from "lucide-react";
+import axios from "axios";
+import { toast } from "sonner";
 const AppointmentsPage = () => {
   const { token } = useAuth();
   const [filterPopUp, setFilterPopUp] = useState(false);
@@ -45,15 +47,31 @@ const AppointmentsPage = () => {
   const loadAppointments = useCallback(
     async (page: number, filters: any) => {
       setLoading(true);
-      const data = await fetchAppointments(
-        page,
-        pageSize,
-        filters,
-        token as string
-      );
-      setAppointments((prev) => (page === 1 ? data : [...prev, ...data]));
-      setHasMore(data.length === pageSize);
-      setLoading(false);
+      try {
+        const data = await fetchAppointments(
+          page,
+          pageSize,
+          filters,
+          token as string
+        );
+        setAppointments((prev) => (page === 1 ? data : [...prev, ...data]));
+        setHasMore(data.length === pageSize);
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          // if api provider given error
+          if (error.response) {
+            toast.error(`Error fetching data: ${error.response.data.message}`);
+          } else {
+            toast.error(`Error fetching data: ${error.message}`);
+          }
+        } else if (error instanceof Error) {
+          toast.error(`${error.message}`);
+        } else {
+          toast.error("Something went wrong try again");
+        }
+      } finally {
+        setLoading(false);
+      }
     },
     [token]
   );

@@ -80,16 +80,27 @@ const DoctorCard = ({ doctor, onClick, onDelete }: DoctorCardProps) => {
 
   const handleDelete = async () => {
     if (token) {
-      const response = await deleteDoctorById(token, doctor.id);
-      if (response) {
+      try {
+        const response = await deleteDoctorById(token, doctor.id);
         toast.success("Doctor Deleted Successfully");
         onDelete(doctor.id);
-      } else {
-        toast.error("Failed to delete doctor");
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          // if api provider given error
+          if (error.response) {
+            toast.error(`Error :${error.response.data.message}`);
+          } else {
+            toast.error(`Error :${error.message}`);
+          }
+        } else if (error instanceof Error) {
+          toast.error(`${error.message}`);
+        } else {
+          toast.error("Something went wrong try again");
+        }
+      } finally {
       }
     }
   };
-
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const formData = new FormData();

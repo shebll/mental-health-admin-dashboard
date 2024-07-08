@@ -19,6 +19,8 @@ import { egyptianCities } from "@/data/egyptianCities";
 import { specializations } from "@/data/specializations";
 import { Filter, PlusCircleIcon } from "lucide-react";
 import Link from "next/link";
+import axios from "axios";
+import { toast } from "sonner";
 
 const DoctorsPage = () => {
   const [filterPopUp, setFilterPopUp] = useState(false);
@@ -50,10 +52,31 @@ const DoctorsPage = () => {
   const loadDoctors = useCallback(
     async (page: number, filters: any) => {
       setLoading(true);
-      const data = await fetchDoctors(page, pageSize, filters, token as string);
-      setDoctors((prev) => (page === 1 ? data : [...prev, ...data]));
-      setHasMore(data.length === pageSize);
-      setLoading(false);
+      try {
+        const data = await fetchDoctors(
+          page,
+          pageSize,
+          filters,
+          token as string
+        );
+        setDoctors((prev) => (page === 1 ? data : [...prev, ...data]));
+        setHasMore(data.length === pageSize);
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          // if api provider given error
+          if (error.response) {
+            toast.error(`Error fetching data: ${error.response.data.message}`);
+          } else {
+            toast.error(`Error fetching data: ${error.message}`);
+          }
+        } else if (error instanceof Error) {
+          toast.error(`${error.message}`);
+        } else {
+          toast.error("Something went wrong try again");
+        }
+      } finally {
+        setLoading(false);
+      }
     },
     [token]
   );

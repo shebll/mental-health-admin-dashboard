@@ -10,6 +10,8 @@ import UserCard from "@/components/Users/UserCard";
 import UserDetails from "@/components/Users/UserDetails";
 import { UserType } from "@/types/UserType";
 import { Filter } from "lucide-react";
+import axios from "axios";
+import { toast } from "sonner";
 
 const UsersPage = () => {
   const { token } = useAuth();
@@ -37,10 +39,26 @@ const UsersPage = () => {
   const loadUsers = useCallback(
     async (page: number, filters: any) => {
       setLoading(true);
-      const data = await fetchUsers(page, pageSize, filters, token as string);
-      setUsers((prev) => (page === 1 ? data : [...prev, ...data]));
-      setHasMore(data.length === pageSize);
-      setLoading(false);
+      try {
+        const data = await fetchUsers(page, pageSize, filters, token as string);
+        setUsers((prev) => (page === 1 ? data : [...prev, ...data]));
+        setHasMore(data.length === pageSize);
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          // if api provider given error
+          if (error.response) {
+            toast.error(`Error fetching data: ${error.response.data.message}`);
+          } else {
+            toast.error(`Error fetching data: ${error.message}`);
+          }
+        } else if (error instanceof Error) {
+          toast.error(`${error.message}`);
+        } else {
+          toast.error("Something went wrong try again");
+        }
+      } finally {
+        setLoading(false);
+      }
     },
     [token]
   );

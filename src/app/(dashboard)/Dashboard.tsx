@@ -11,6 +11,7 @@ import GenderDistributionChart from "@/components/dashboard/GenderDistributionCh
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { Activity, Calendar, UserCheck, Users } from "lucide-react";
+import axios from "axios";
 
 interface DashboardData {
   totalAppointmentsCount: number;
@@ -49,8 +50,19 @@ export default function DashboardPage() {
       try {
         const summaryData = await fetchSummary(token as string);
         setData(summaryData);
-      } catch (err) {
-        setError("Failed to load dashboard data. Please try again later.");
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          // if api provider given error
+          if (error.response) {
+            setError(`Error fetching data: ${error.response.data.message}`);
+          } else {
+            setError(`Error fetching data: ${error.message}`);
+          }
+        } else if (error instanceof Error) {
+          setError(`${error.message}`);
+        } else {
+          setError("Something went wrong try again");
+        }
       } finally {
         setIsLoading(false);
       }

@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const apiInstance = axios.create({
   baseURL: "https://nexus-api-h3ik.onrender.com/api",
@@ -7,12 +7,24 @@ const apiInstance = axios.create({
 });
 
 export const fetchSummary = async (token: string) => {
-  const { data } = await apiInstance.get("/admins/summary", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.get("/admins/summary", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 
 export const fetchAppointments = async (
@@ -21,28 +33,52 @@ export const fetchAppointments = async (
   filters: any,
   token: string
 ) => {
-  const { data } = await apiInstance.get(`/appointments`, {
-    params: {
-      PageNumber: page,
-      PageSize: pageSize,
-      ...filters,
-    },
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.get(`/appointments`, {
+      params: {
+        PageNumber: page,
+        PageSize: pageSize,
+        ...filters,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 
 export const fetchAppointmentById = async (token: string, id: string) => {
-  const { data } = await apiInstance.get(`/appointments/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.get(`/appointments/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 
 export const fetchDoctors = async (
@@ -51,37 +87,73 @@ export const fetchDoctors = async (
   filters: any,
   token: string
 ) => {
-  const { data } = await apiInstance.get(`/doctors`, {
-    params: {
-      PageNumber: page,
-      PageSize: pageSize,
-      ...filters,
-    },
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.get(`/doctors`, {
+      params: {
+        PageNumber: page,
+        PageSize: pageSize,
+        ...filters,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 
 export const fetchDoctorById = async (token: string, id: string) => {
-  const { data } = await apiInstance.get(`/doctors/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.get(`/doctors/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 export const deleteDoctorById = async (token: string, id: string) => {
-  const { data } = await apiInstance.delete(`/doctors?userId=${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.delete(`/doctors?userId=${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 
 export const fetchUsers = async (
@@ -90,62 +162,122 @@ export const fetchUsers = async (
   filters: any,
   token: string
 ) => {
-  const { data } = await apiInstance.get(`/users`, {
-    params: {
-      PageNumber: page,
-      PageSize: pageSize,
-      ...filters,
-    },
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.get(`/users`, {
+      params: {
+        PageNumber: page,
+        PageSize: pageSize,
+        ...filters,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 
 export const fetchUserById = async (token: string, id: string) => {
-  const { data } = await apiInstance.get(`/users/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.get(`/users/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 export const deleteUserById = async (token: string, id: string) => {
-  const { data } = await apiInstance.delete(`/users?userId=${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.delete(`/users?userId=${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 export const deletePostById = async (token: string, id: string) => {
-  const { data } = await apiInstance.delete(`/posts/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiInstance.delete(`/posts/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
 };
 export const deleteCommentById = async (
   token: string,
   postId: string,
   commentId: string
 ) => {
-  const { data } = await apiInstance.delete(
-    `/posts/${postId}/comments/${commentId}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+  try {
+    const { data } = await apiInstance.delete(
+      `/posts/${postId}/comments/${commentId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
     }
-  );
-  return data;
+    throw error;
+  }
 };
 export const deleteReplyById = async (
   token: string,
@@ -153,14 +285,26 @@ export const deleteReplyById = async (
   commentId: string,
   postId: string
 ) => {
-  const { data } = await apiInstance.delete(
-    `/posts/${postId}/comments/${commentId}/replies/${replyId}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+  try {
+    const { data } = await apiInstance.delete(
+      `/posts/${postId}/comments/${commentId}/replies/${replyId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching forecast data:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
     }
-  );
-  return data;
+    throw error;
+  }
 };
