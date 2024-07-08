@@ -54,9 +54,9 @@ export default function DashboardPage() {
         if (axios.isAxiosError(error)) {
           // if api provider given error
           if (error.response) {
-            setError(`Error fetching data: ${error.response.data.message}`);
+            setError(`Error : ${error.response.data.message}`);
           } else {
-            setError(`Error fetching data: ${error.message}`);
+            setError(`Error : ${error.message}`);
           }
         } else if (error instanceof Error) {
           setError(`${error.message}`);

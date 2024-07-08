@@ -16,7 +16,7 @@ export const fetchSummary = async (token: string) => {
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -48,7 +48,7 @@ export const fetchAppointments = async (
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -70,7 +70,7 @@ export const fetchAppointmentById = async (token: string, id: string) => {
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -102,7 +102,7 @@ export const fetchDoctors = async (
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -124,7 +124,7 @@ export const fetchDoctorById = async (token: string, id: string) => {
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -145,7 +145,7 @@ export const deleteDoctorById = async (token: string, id: string) => {
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -177,7 +177,7 @@ export const fetchUsers = async (
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -199,7 +199,7 @@ export const fetchUserById = async (token: string, id: string) => {
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -220,7 +220,7 @@ export const deleteUserById = async (token: string, id: string) => {
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -241,7 +241,7 @@ export const deletePostById = async (token: string, id: string) => {
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -269,7 +269,7 @@ export const deleteCommentById = async (
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }
@@ -298,7 +298,7 @@ export const deleteReplyById = async (
     return data;
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching forecast data:", error.message);
+      console.error("Error :", error.message);
       if (error.response) {
         console.error("Response data:", error.response.data.message);
       }

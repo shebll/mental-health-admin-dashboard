@@ -38,7 +38,7 @@ const UsersPage = () => {
 
   const loadUsers = useCallback(
     async (page: number, filters: any) => {
-      setLoading(true);
+      // setLoading(true);
       try {
         const data = await fetchUsers(page, pageSize, filters, token as string);
         setUsers((prev) => (page === 1 ? data : [...prev, ...data]));
@@ -47,9 +47,9 @@ const UsersPage = () => {
         if (axios.isAxiosError(error)) {
           // if api provider given error
           if (error.response) {
-            toast.error(`Error fetching data: ${error.response.data.message}`);
+            toast.error(`Error : ${error.response.data.message}`);
           } else {
-            toast.error(`Error fetching data: ${error.message}`);
+            toast.error(`Error : ${error.message}`);
           }
         } else if (error instanceof Error) {
           toast.error(`${error.message}`);
@@ -57,7 +57,7 @@ const UsersPage = () => {
           toast.error("Something went wrong try again");
         }
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
     [token]

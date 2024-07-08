@@ -60,9 +60,9 @@ const AppointmentsPage = () => {
         if (axios.isAxiosError(error)) {
           // if api provider given error
           if (error.response) {
-            toast.error(`Error fetching data: ${error.response.data.message}`);
+            toast.error(`Error : ${error.response.data.message}`);
           } else {
-            toast.error(`Error fetching data: ${error.message}`);
+            toast.error(`Error : ${error.message}`);
           }
         } else if (error instanceof Error) {
           toast.error(`${error.message}`);
