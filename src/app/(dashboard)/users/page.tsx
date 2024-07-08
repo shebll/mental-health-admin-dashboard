@@ -38,7 +38,7 @@ const UsersPage = () => {
 
   const loadUsers = useCallback(
     async (page: number, filters: any) => {
-      // setLoading(true);
+      setLoading(true);
       try {
         const data = await fetchUsers(page, pageSize, filters, token as string);
         setUsers((prev) => (page === 1 ? data : [...prev, ...data]));
@@ -57,7 +57,7 @@ const UsersPage = () => {
           toast.error("Something went wrong try again");
         }
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     },
     [token]
@@ -216,7 +216,7 @@ const UsersPage = () => {
           )}
         </div>
       </div>
-      <div ref={ref} />
+      <div ref={ref} className="w-4 h-4" />
       {selectedUser && (
         <UserDetails
           user={selectedUser}
