@@ -2,7 +2,7 @@
 import axios, { AxiosError } from "axios";
 
 const apiInstance = axios.create({
-  baseURL: "https://nexus-api-h3ik.onrender.com/api",
+  baseURL: "https://nexus-api.runasp.net/api",
   headers: {},
 });
 
