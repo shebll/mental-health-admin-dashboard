@@ -25,16 +25,13 @@ const usePosts = (page: any, filters: any) => {
     if (filters.ConfessionsOnly)
       queryParams.set("ConfessionsOnly", filters.ConfessionsOnly.toString());
 
-    fetch(
-      `https://nexus-api-h3ik.onrender.com/api/posts?${queryParams.toString()}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`https://nexus-api.runasp.net/api/posts?${queryParams.toString()}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setPosts((prevPosts: any) =>

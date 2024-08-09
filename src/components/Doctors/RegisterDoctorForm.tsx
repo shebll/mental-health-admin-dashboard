@@ -54,7 +54,7 @@ const RegisterDoctorForm = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://nexus-api-h3ik.onrender.com/api/auth/register",
+        "https://nexus-api.runasp.net/api/auth/register",
         data,
         {
           headers: { "Content-Type": "application/json" },

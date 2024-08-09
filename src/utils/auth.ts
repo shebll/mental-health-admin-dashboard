@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 export async function login(email: string, password: string) {
   try {
     const response = await fetch(
-      "https://nexus-api-h3ik.onrender.com/api/auth/signin",
+      "https://nexus-api.runasp.net/api/auth/signin",
       {
         method: "POST",
         headers: {

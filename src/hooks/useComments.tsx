@@ -7,7 +7,7 @@ export const useComments = (postId: string) => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`https://nexus-api-h3ik.onrender.com/api/posts/${postId}/comments`)
+    fetch(`https://nexus-api.runasp.net/api/posts/${postId}/comments`)
       .then((res) => res.json())
       .then((data: CommentType[]) => {
         setComments(data);
@@ -25,7 +25,7 @@ export const useReplies = (postId: string, commentId: number) => {
   useEffect(() => {
     setLoading(true);
     fetch(
-      `https://nexus-api-h3ik.onrender.com/api/posts/${postId}/comments/${commentId}/replies`
+      `https://nexus-api.runasp.net/api/posts/${postId}/comments/${commentId}/replies`
     )
       .then((res) => res.json())
       .then((data: ReplyType[]) => {
