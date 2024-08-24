@@ -1,5 +1,4 @@
 import { formatDateTimeRange } from "@/lib/timeAgoFunction";
-import { Appointment } from "@/types/appointment";
 import Image from "next/image";
 import { FC } from "react";
 

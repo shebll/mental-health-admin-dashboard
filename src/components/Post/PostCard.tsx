@@ -1,4 +1,3 @@
-import { Post } from "@/types/Posts";
 import Image from "next/image";
 import { Trash, User } from "lucide-react";
 import CommentSection from "../Comments/CommentSection";

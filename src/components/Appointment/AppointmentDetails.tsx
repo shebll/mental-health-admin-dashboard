@@ -1,4 +1,3 @@
-import { Appointment } from "@/types/appointment";
 import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
