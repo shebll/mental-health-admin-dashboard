@@ -2,7 +2,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { login } from "@/utils/auth";
-import { FormSchema, FormSchemaType } from "@/types/LoginFormSchema";
+import { FormSchema, FormSchemaType } from "@/formSchema/LoginFormSchema";
 
 // zod react form
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -9,7 +9,6 @@ export function middleware(request: NextRequest) {
   if (token) {
     const adminData = decodeToken(token);
     if (adminData.roles === "Admin") isAdmin = true;
-    // console.log(adminData);
   }
 
   const loginUrl = new URL("/login", request.url);

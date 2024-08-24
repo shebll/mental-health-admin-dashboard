@@ -27,14 +27,6 @@ export async function login(email: string, password: string) {
   }
 }
 
-interface TokenPayload {
-  id: string;
-  email: string;
-  name: string;
-  roles: string;
-  photoUrl: string;
-}
-
 export function decodeToken(token: string): TokenPayload {
   const decoded = jwtDecode<any>(token);
   return {

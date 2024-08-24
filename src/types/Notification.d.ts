@@ -1,4 +1,3 @@
-// Notification data Type
 export type NotificationType = {
   id: number;
   dateCreated: string;

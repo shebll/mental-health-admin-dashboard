@@ -1,4 +1,3 @@
-// Post type data
 export type Post = {
   appUserId: string;
   commentsCount: number;

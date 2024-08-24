@@ -1,17 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { fetchSummary } from "@/lib/api";
+
 import ErrorAlert from "@/components/dashboard/ErrorAlert";
 import StatCard from "@/components/dashboard/StatCard";
 import TestResultsChart from "@/components/dashboard/TestResultsChart";
 import AgeGroupDistributionChart from "@/components/dashboard/AgeGroupDistributionChart";
 import GenderDistributionChart from "@/components/dashboard/GenderDistributionChart";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { useAuth } from "@/context/AuthContext";
 import { Activity, Calendar, UserCheck, Users } from "lucide-react";
-import axios from "axios";
 
 interface DashboardData {
   totalAppointmentsCount: number;
@@ -41,48 +44,19 @@ interface DashboardData {
 
 export default function DashboardPage() {
   const { token } = useAuth();
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const summaryData = await fetchSummary(token as string);
-        setData(summaryData);
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          // if api provider given error
-          if (error.response) {
-            setError(`Error : ${error.response.data.message}`);
-          } else {
-            setError(`Error : ${error.message}`);
-          }
-        } else if (error instanceof Error) {
-          setError(`${error.message}`);
-        } else {
-          setError("Something went wrong try again");
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadData();
-  }, [token]);
+  const { data, isLoading, isError, error } = useQuery({
+    queryFn: () => fetchSummary(token as string),
+    queryKey: ["analytics"],
+  });
 
   if (isLoading) {
     return <DashboardSkeleton />;
   }
 
-  if (error) {
-    return <ErrorAlert message={error} />;
+  if (isError) {
+    return <ErrorAlert message={error.message} />;
   }
-
-  if (!data) {
-    return null;
-  }
-
   return (
     <div className="container mx-auto p-6 space-y-8 bg-gray-50 dark:bg-background">
       <h1 className="text-4xl font-bold mb-8 text-secondary-900">
