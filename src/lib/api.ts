@@ -161,7 +161,7 @@ export const fetchUsers = async (
   pageSize: number,
   filters: any,
   token: string
-) => {
+): Promise<{ data: UserType[]; page: number; hasNext: boolean }> => {
   try {
     const { data } = await apiInstance.get(`/users`, {
       params: {
@@ -174,7 +174,7 @@ export const fetchUsers = async (
         Authorization: `Bearer ${token}`,
       },
     });
-    return data;
+    return { data: data, page, hasNext: data.length == pageSize };
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
       console.error("Error :", error.message);

@@ -1,6 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
 import { deleteUserById } from "@/lib/api";
-import { UserType } from "@/types/UserType";
 import { Trash } from "lucide-react";
 import Image from "next/image";
 import { FC, useState } from "react";
