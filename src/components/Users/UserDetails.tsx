@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { UserType } from "@/types/UserType";
 import { useAuth } from "@/context/AuthContext";
 import { deleteUserById } from "@/lib/api";
 import { Trash } from "lucide-react";
