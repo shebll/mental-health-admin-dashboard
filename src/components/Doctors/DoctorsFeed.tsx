@@ -28,8 +28,7 @@ const DoctorsFeed = () => {
     queryKey: ["doctors", filters, token],
     queryFn: ({ pageParam = 1 }) =>
       fetchDoctors(pageParam, 10, filters, token as string),
-    getNextPageParam: (lastPage) =>
-      lastPage.hasNext ? lastPage.page + 1 : undefined,
+    getNextPageParam: (data) => (data.hasNext ? data.page + 1 : undefined),
     enabled: !!token,
   });
 

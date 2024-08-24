@@ -1,4 +1,4 @@
-export interface Appointment {
+interface Appointment {
   id: number;
   userId: string;
   doctorId: string;

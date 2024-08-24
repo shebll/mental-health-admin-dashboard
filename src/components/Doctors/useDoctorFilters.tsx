@@ -7,15 +7,6 @@ import {
 } from "react";
 import { useSearchParams } from "next/navigation";
 
-type FilterType = {
-  Name: string;
-  Specialization: string;
-  Gender: string;
-  City: string;
-  MinFees: number;
-  MaxFees: number;
-};
-
 type DoctorFiltersContextType = {
   filters: FilterType;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -35,10 +26,10 @@ export const DoctorFiltersProvider: React.FC<{ children: React.ReactNode }> = ({
   const searchParams = useSearchParams();
 
   const getFiltersFromURL = (): FilterType => ({
-    Name: searchParams.get("Name") || "",
-    Specialization: searchParams.get("Specialization") || "",
-    Gender: searchParams.get("Gender") || "",
-    City: searchParams.get("City") || "",
+    Name: searchParams.get("Name") || undefined,
+    Specialization: searchParams.get("Specialization") || undefined,
+    Gender: searchParams.get("Gender") || undefined,
+    City: searchParams.get("City") || undefined,
     MinFees: parseInt(searchParams.get("MinFees") || "0", 10),
     MaxFees: parseInt(searchParams.get("MaxFees") || "1000", 10),
   });

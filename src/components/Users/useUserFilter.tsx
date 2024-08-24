@@ -24,8 +24,8 @@ export const UserFiltersProvider: React.FC<{ children: React.ReactNode }> = ({
   const searchParams = useSearchParams();
 
   const getFiltersFromURL = (): UserFilterType => ({
-    Name: searchParams.get("Name") || "",
-    Gender: searchParams.get("Gender") || "",
+    Name: searchParams.get("Name") || undefined,
+    Gender: searchParams.get("Gender") || undefined,
   });
 
   const [filters, setFilters] = useState<UserFilterType>(getFiltersFromURL);

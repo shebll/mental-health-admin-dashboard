@@ -32,7 +32,7 @@ export const fetchAppointments = async (
   pageSize: number,
   filters: any,
   token: string
-) => {
+): Promise<{ data: Appointment[]; page: number; hasNext: boolean }> => {
   try {
     const { data } = await apiInstance.get(`/appointments`, {
       params: {
@@ -45,7 +45,7 @@ export const fetchAppointments = async (
         Authorization: `Bearer ${token}`,
       },
     });
-    return data;
+    return { data: data, page, hasNext: data.length === pageSize };
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
       console.error("Error :", error.message);
@@ -100,6 +100,37 @@ export const fetchDoctors = async (
       },
     });
     return { data: data, page, hasNext: data.length == pageSize };
+  } catch (error: unknown | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error :", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data.message);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+    }
+    throw error;
+  }
+};
+export const fetchPosts = async (
+  page: number,
+  pageSize: number,
+  filters: any,
+  token: string
+): Promise<{ data: Post[]; page: number; hasNext: boolean }> => {
+  try {
+    const { data } = await apiInstance.get(`/posts`, {
+      params: {
+        PageNumber: page,
+        PageSize: pageSize,
+        ...filters,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return { data: data, page, hasNext: data.length === pageSize };
   } catch (error: unknown | AxiosError) {
     if (axios.isAxiosError(error)) {
       console.error("Error :", error.message);

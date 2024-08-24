@@ -1,4 +1,4 @@
 type UserFilterType = {
-  Name: string;
-  Gender: string;
+  Name: string | undefined;
+  Gender: string | undefined;
 };

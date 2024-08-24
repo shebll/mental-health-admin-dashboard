@@ -1,4 +1,4 @@
-export type Post = {
+type Post = {
   appUserId: string;
   commentsCount: number;
   content: string;
@@ -10,7 +10,7 @@ export type Post = {
   title: string;
   username: string;
 };
-export interface CommentType {
+interface CommentType {
   id: number;
   content: string;
   commentedAt: string;
@@ -20,7 +20,7 @@ export interface CommentType {
   repliesCount: number;
 }
 
-export interface ReplyType {
+interface ReplyType {
   id: number;
   content: string;
   repliedAt: string;
