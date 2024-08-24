@@ -6,7 +6,7 @@ import { fetchUsers } from "@/lib/api";
 
 import UserCard from "@/components/Users/UserCard";
 import UserDetails from "@/components/Users/UserDetails";
-import InfinityScrolling from "./InfinityScrolling";
+import InfinityScrolling from "../layout/InfinityScrolling";
 import { useUserFilters } from "./useUserFilter";
 
 function UsersFeed() {

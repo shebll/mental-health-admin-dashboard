@@ -19,7 +19,7 @@ function InfinityScrolling({
     InfiniteQueryObserverResult<
       InfiniteData<
         {
-          data: UserType[];
+          data: any[];
           page: number;
         },
         unknown
