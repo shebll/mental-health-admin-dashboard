@@ -1,13 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchUsers } from "@/lib/api";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { deleteUserById, fetchUsers } from "@/lib/api";
 
-import UserCard from "@/components/Users/UserCard";
 import UserDetails from "@/components/Users/UserDetails";
 import InfinityScrolling from "../layout/InfinityScrolling";
 import { useUserFilters } from "./useUserFilter";
+import UserTable from "./UserTable";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
 
 function UsersFeed() {
   const { filters } = useUserFilters();
@@ -34,41 +40,31 @@ function UsersFeed() {
     enabled: !!token,
   });
 
-  // console.log("data", data);
-  // console.log("isFetchingNextPage", isFetchingNextPage);
-  // console.log("hasNextPage", hasNextPage);
-  // console.log("fetchNextPage", fetchNextPage);
-  // console.log("isError", isError);
-  // console.log("isLoading", isLoading);
-  // console.log("error", error);
+  const allUsers = data?.pages.flatMap((page) => page.data) || [];
+
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation({
+    mutationFn: (userId: string) => deleteUserById(token as string, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("User deleted successfully");
+      setSelectedUser(null);
+    },
+    onError: () => toast.error("Failed to delete user"),
+  });
 
   return (
     <div className="flex-1">
-      <div className="flex flex-row-reverse gap-6">
-        <div className="flex-1 flex flex-col gap-4">
-          {data?.pages
-            .flatMap((data) => data.data)
-            .map((user) => (
-              <UserCard
-                onDelete={() => {}}
-                key={user.id}
-                User={user}
-                onClick={() => setSelectedUser(user)}
-              />
-            ))}
-          {data?.pages[0].data.length == 0 && !isLoading && (
-            <p>No Users Found</p>
-          )}
-          {(isLoading || isFetchingNextPage) && (
-            <div className="flex flex-col gap-4">
-              <UserLoading />
-              <UserLoading />
-              <UserLoading />
-              <UserLoading />
-              <UserLoading />
-            </div>
-          )}
-        </div>
+      <div className="flex-1 flex flex-col gap-4">
+        <UserTable
+          users={allUsers}
+          onUserClick={setSelectedUser}
+          onDeleteUser={(userId) => deleteMutation.mutate(userId)}
+        />
+        {allUsers.length === 0 && !isLoading && (
+          <p className="text-center mt-4">No Users Found</p>
+        )}
+        {(isLoading || isFetchingNextPage) && <UserLoading />}
       </div>
       <InfinityScrolling
         hasNextPage={hasNextPage}
@@ -92,24 +88,31 @@ export default UsersFeed;
 
 const UserLoading = () => {
   return (
-    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50  p-4 rounded-md ">
-      <div className="flex flex-col md:flex-row  justify-start gap-20 items-start w-full">
-        <div className="flex flex-col gap-4 w-full">
-          <div className="flex items-start gap-6">
-            <span className="w-[100px] h-[100px] rounded-full bg-secondary/50 animate-pulse"></span>
-
-            <div className="flex flex-col gap-2 w-[50%]">
-              <h2 className="w-[84%] h-6 bg-secondary/50 rounded-lg animate-pulse"></h2>
-              <p className="w-[67%] h-4 bg-secondary/50 rounded-lg animate-pulse"></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col gap-4 items-start w-full">
-        <span className="w-[26%] h-4 bg-secondary/50 rounded-md animate-pulse"></span>
-        <p className="w-[24%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-        <p className="w-[67%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-      </div>
-    </div>
+    <Table>
+      <TableBody>
+        {[...Array(8)].map((_, index) => (
+          <TableRow key={index}>
+            <TableCell>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-secondary/50 animate-pulse"></div>
+                <div className="w-24 h-4 bg-secondary/50 rounded animate-pulse"></div>
+              </div>
+            </TableCell>
+            <TableCell>
+              <div className="w-32 h-4 bg-secondary/50 rounded animate-pulse"></div>
+            </TableCell>
+            <TableCell>
+              <div className="w-24 h-4 bg-secondary/50 rounded animate-pulse"></div>
+            </TableCell>
+            <TableCell>
+              <div className="w-16 h-4 bg-secondary/50 rounded animate-pulse"></div>
+            </TableCell>
+            <TableCell>
+              <div className="w-20 h-6 bg-secondary/50 rounded-full animate-pulse"></div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };

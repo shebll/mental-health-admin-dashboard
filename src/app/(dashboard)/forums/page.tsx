@@ -8,7 +8,7 @@ import PageTitle from "@/components/ui/PageTitle";
 const PostsPage = () => {
   return (
     <PostFiltersProvider>
-      <div className="max-w-[1000px] mx-auto flex flex-col gap-4">
+      <div className="max-w-[1200px] mx-auto flex flex-col gap-4">
         <PageTitle title="Forums" />
         <div className="flex gap-4">
           <PostsFeed />
