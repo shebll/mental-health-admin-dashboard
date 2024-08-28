@@ -186,6 +186,54 @@ export const deleteDoctorById = async (token: string, id: string) => {
     throw error;
   }
 };
+export const updateDoctor = async (
+  token: string,
+  doctorId: string,
+  data: any
+) => {
+  try {
+    const formData = new FormData();
+    Object.keys(data).forEach((key) => {
+      if (key === "photo" && data[key] instanceof File) {
+        formData.append(key, data[key]);
+      } else {
+        formData.append(key, String(data[key]));
+      }
+    });
+
+    const { data: responseData } = await apiInstance.put(
+      `/doctors/${doctorId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return responseData;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error updating doctor:", error.message);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        if (error.response.data.errors) {
+          const serverErrors = error.response.data.errors;
+          Object.keys(serverErrors).forEach((key) => {
+            console.error(`${key}: ${serverErrors[key][0]}`);
+          });
+        }
+      }
+    } else {
+      console.error(
+        "An unexpected error occurred while updating the doctor:",
+        error
+      );
+    }
+    throw error;
+  }
+};
 
 export const fetchUsers = async (
   page: number,
@@ -337,5 +385,27 @@ export const deleteReplyById = async (
       console.error("An unexpected error occurred:", error);
     }
     throw error;
+  }
+};
+
+export const registerUser = async (userData: any) => {
+  try {
+    const response = await apiInstance.post("auth/register", userData);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error);
+  }
+};
+
+const handleAxiosError = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    console.error("Error:", error.message);
+    if (error.response) {
+      console.error("Response data:", error.response.data);
+      throw error.response.data; // Throw error response to handle in react-query
+    }
+  } else {
+    console.error("An unexpected error occurred:", error);
+    throw new Error("An unexpected error occurred");
   }
 };

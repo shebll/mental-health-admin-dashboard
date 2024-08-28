@@ -7,7 +7,7 @@ interface ConfirmationPopupProps {
   message: string;
   confirmText: string;
   onCancel: () => void;
-  onConfirm: () => Promise<void>;
+  onConfirm: () => void;
 }
 
 const ConfirmationPopup: FC<ConfirmationPopupProps> = ({
@@ -24,7 +24,7 @@ const ConfirmationPopup: FC<ConfirmationPopupProps> = ({
     e.preventDefault();
     setIsLoading(true);
     try {
-      await onConfirm();
+      onConfirm();
     } catch (error) {
       toast.error("Operation failed");
     } finally {
@@ -36,7 +36,7 @@ const ConfirmationPopup: FC<ConfirmationPopupProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="absolute inset-0 w-full h-screen z-[30] bg-black/20 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className=" fixed inset-0 w-full h-screen z-[30] bg-black/10 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="max-w-[460px]">
         <div
           onClick={onCancel}

@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { registerUser } from "@/lib/api";
 
 const schema = z.object({
   firstName: z
@@ -39,42 +39,40 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const RegisterDoctorForm = () => {
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
-
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        "https://nexus-api.runasp.net/api/auth/register",
-        data,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      toast.success(response.data.message);
-      router.push("/doctors");
-    } catch (error: any) {
-      if (error.response.data.status !== 201) {
-        for (const key in error.response.data.errors) {
-          toast.error(`${key}: ${error.response.data.errors[key]}`);
-        }
-        console.log(error.response.data.errors);
+  const mutation = useMutation({
+    mutationFn: (data) => registerUser(data),
+    onSuccess: (data) => {
+      toast.success("User registered successfully");
+    },
+    onError: (error: any) => {
+      if (error?.errors) {
+        error.errors.forEach((err: any) => {
+          if (err.code === "Users.EmailNotUnique") {
+            setError("email", {
+              type: "manual",
+              message: err.description,
+            });
+          }
+        });
       } else {
-        toast.error("An error occurred while registering the doctor");
+        toast.error("An unexpected error occurred");
       }
-      console.error("Error registering doctor:", error);
-    } finally {
-      setLoading(false);
-    }
+    },
+    retry: 1,
+  });
+
+  const onSubmit = (data: any) => {
+    mutation.mutate(data);
   };
 
   return (
@@ -122,7 +120,12 @@ const RegisterDoctorForm = () => {
         <p className="text-red-500">{errors.password.message}</p>
       )}
 
-      <Input type="date" {...register("birthDate")} className="mb-2" />
+      <Input
+        type="date"
+        placeholder="Birth Date"
+        {...register("birthDate")}
+        className="mb-2"
+      />
       {errors.birthDate && (
         <p className="text-red-500">{errors.birthDate.message}</p>
       )}
@@ -148,6 +151,7 @@ const RegisterDoctorForm = () => {
         </label>
       </div>
       {errors.gender && <p className="text-red-500">{errors.gender.message}</p>}
+
       <input
         type="text"
         value="Doctor"
@@ -155,14 +159,15 @@ const RegisterDoctorForm = () => {
         className="hidden"
       />
       {errors.role && <p className="text-red-500">{errors.role.message}</p>}
+
       <button
         type="submit"
         className={`p-2 ${
           isValid ? "bg-blue-500" : "bg-gray-500 cursor-not-allowed"
-        } text-white rounded w-full `}
-        disabled={!isValid || loading}
+        } text-white rounded w-full`}
+        disabled={!isValid || mutation.isPending}
       >
-        {loading ? "Loading..." : "Register"}
+        {mutation.isPending ? "Loading..." : "Register"}
       </button>
     </form>
   );

@@ -9,6 +9,6 @@ interface DoctorType {
   lastName: string;
   email: string;
   birthDate: string;
-  gender: string;
+  gender: "male" | "female";
   photoUrl: string;
 }
