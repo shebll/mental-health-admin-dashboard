@@ -1,115 +1,113 @@
+import React from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { formatDateTimeRange } from "@/lib/timeAgoFunction";
-import Image from "next/image";
-import { FC } from "react";
 
-interface AppointmentCardProps {
-  appointment: Appointment;
-  onClick?: () => void;
+interface AppointmentTableProps {
+  appointments: Appointment[];
+  onRowClick?: (appointment: Appointment) => void;
 }
 
-const AppointmentCard: FC<AppointmentCardProps> = ({
-  appointment,
-  onClick,
+const AppointmentTable: React.FC<AppointmentTableProps> = ({
+  appointments,
+  onRowClick,
 }) => {
   return (
-    <div
-      className="p-4 border rounded shadow-md cursor-pointer"
-      onClick={onClick}
-    >
-      <div className="flex flex-col justify-start items-start gap-14">
-        <div className="w-full flex flex-col lg:flex-row justify-start gap-y-8 gap-x-10 items-start">
-          <div className="flex flex-col gap-2">
-            <h1>Patient:</h1>
-            <div className="flex items-start gap-6">
-              <Image
-                src={
-                  appointment.clientPhotoUrl
-                    ? appointment.clientPhotoUrl.startsWith("http://")
-                      ? appointment.clientPhotoUrl
-                      : "/user.png"
-                    : "/user.png"
-                }
-                alt="clientPhotoUrl"
-                width={100}
-                height={100}
-                className=" rounded-full"
-              />
-              <div className="flex flex-col gap-1">
-                <h2 className="text-lg font-bold">
-                  <strong>{appointment.clientName}</strong>{" "}
-                </h2>
-                <p>
-                  Email: <strong>{appointment.clientEmail} </strong>
-                </p>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Patient</TableHead>
+          <TableHead>Doctor</TableHead>
+          <TableHead>Date & Time</TableHead>
+          <TableHead>Location</TableHead>
+          <TableHead>Fees</TableHead>
+          <TableHead>Status</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {appointments.map((appointment) => (
+          <TableRow
+            key={appointment.id}
+            onClick={() => onRowClick?.(appointment)}
+            className="cursor-pointer hover:bg-secondary/50"
+          >
+            <TableCell>
+              <div className="flex items-center space-x-3">
+                <Avatar>
+                  <AvatarImage
+                    src={appointment.clientPhotoUrl || "/user.png"}
+                    alt={appointment.clientName}
+                  />
+                  <AvatarFallback>
+                    {appointment.clientName.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="font-bold">{appointment.clientName}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {appointment.clientEmail}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h1>Doctor: </h1>
-            <div className="flex items-start gap-6">
-              <Image
-                src={
-                  appointment.doctorPhotoUrl
-                    ? appointment.doctorPhotoUrl.startsWith("http://")
-                      ? appointment.doctorPhotoUrl
-                      : "/doctor.png"
-                    : "/doctor.png"
-                }
-                alt="doctorPhotoUrl"
-                width={100}
-                height={100}
-                className=" rounded-full"
-              />
-              <div className="flex flex-col gap-1">
-                <h2 className="text-lg font-bold">
-                  <strong>{appointment.doctorName}</strong>{" "}
-                </h2>
-                <p>
-                  Email: <strong>{appointment.doctorEmail} </strong>
-                </p>
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center space-x-3">
+                <Avatar>
+                  <AvatarImage
+                    src={appointment.doctorPhotoUrl || "/doctor.png"}
+                    alt={appointment.doctorName}
+                  />
+                  <AvatarFallback>
+                    {appointment.doctorName.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="font-bold">{appointment.doctorName}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {appointment.doctorEmail}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2 items-start">
-          <h2 className="text-lg font-bold">details</h2>
-
-          <p>
-            Duration:{" "}
-            <strong>
-              {formatDateTimeRange(appointment.startTime, appointment.endTime)}{" "}
-            </strong>
-          </p>
-
-          <p>
-            Fees:<strong> ${appointment.fees} </strong>
-          </p>
-          {appointment.cancellationReason && (
-            <p>
-              Cancel Reason:
-              <strong> {appointment.cancellationReason}</strong>
-            </p>
-          )}
-          {appointment.rejectionReason && (
-            <p>
-              Rejection Reason:
-              <strong> {appointment.rejectionReason}</strong>
-            </p>
-          )}
-          <p>
-            Location:
-            <strong>
-              {" "}
-              {appointment.location ? appointment.location : "not found"}{" "}
-            </strong>
-          </p>
-          <p>
-            Status:<strong> {appointment.status} </strong>
-          </p>
-        </div>
-      </div>
-    </div>
+            </TableCell>
+            <TableCell>
+              {formatDateTimeRange(appointment.startTime, appointment.endTime)}
+            </TableCell>
+            <TableCell>{appointment.location || "N/A"}</TableCell>
+            <TableCell>${appointment.fees}</TableCell>
+            <TableCell>
+              <Badge variant={getStatusVariant(appointment.status)}>
+                {appointment.status}
+              </Badge>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
 
-export default AppointmentCard;
+const getStatusVariant = (
+  status: string
+): "default" | "secondary" | "destructive" | "outline" => {
+  switch (status.toLowerCase()) {
+    case "confirmed":
+      return "default";
+    case "pending":
+      return "secondary";
+    case "cancelled":
+    case "rejected":
+      return "destructive";
+    default:
+      return "outline";
+  }
+};
+
+export default AppointmentTable;

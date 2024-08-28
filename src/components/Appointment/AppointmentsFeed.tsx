@@ -3,9 +3,17 @@ import { useAuth } from "@/context/AuthContext";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchAppointments } from "@/lib/api";
 import { useAppointmentFilters } from "./useAppointmentFilter";
-import AppointmentCard from "./AppointmentCard";
 import InfinityScrolling from "../layout/InfinityScrolling";
 import AppointmentDetails from "./AppointmentDetails";
+import AppointmentTable from "./AppointmentCard";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 function AppointmentsFeed() {
   const { filters } = useAppointmentFilters();
@@ -31,29 +39,19 @@ function AppointmentsFeed() {
     enabled: !!token,
   });
 
+  const allAppointments = data?.pages.flatMap((page) => page.data) || [];
   return (
     <div className="flex-1">
       <div className="flex flex-row-reverse gap-6">
         <div className="flex-1 flex flex-col gap-4">
-          {data?.pages
-            .flatMap((page) => page.data)
-            .map((appointment) => (
-              <AppointmentCard
-                key={appointment.id}
-                appointment={appointment}
-                onClick={() => setSelectedAppointment(appointment)}
-              />
-            ))}
+          <AppointmentTable
+            appointments={allAppointments}
+            onRowClick={(appointment) => setSelectedAppointment(appointment)}
+          />
           {data?.pages[0].data.length === 0 && !isLoading && (
             <p>No Appointments Found</p>
           )}
-          {(isLoading || isFetchingNextPage) && (
-            <div className="flex flex-col gap-4">
-              <AppointmentLoading />
-              <AppointmentLoading />
-              <AppointmentLoading />
-            </div>
-          )}
+          {(isLoading || isFetchingNextPage) && <AppointmentLoading />}
         </div>
       </div>
       <InfinityScrolling
@@ -77,38 +75,53 @@ export default AppointmentsFeed;
 
 const AppointmentLoading = () => {
   return (
-    <div className="flex flex-col justify-start items-start gap-14 bg-secondary/50 p-4 rounded-md ">
-      <div className="flex flex-col md:flex-row  justify-start gap-20 items-start w-full">
-        <div className="flex flex-col gap-4 w-full">
-          <span className="w-[40%] h-4 bg-secondary/50 rounded-lg animate-pulse"></span>
-          <div className="flex items-start gap-6">
-            <span className="w-[100px] h-[100px] rounded-full bg-secondary/50 animate-pulse"></span>
-
-            <div className="flex flex-col gap-2 w-[50%]">
-              <h2 className="w-[84%] h-6 bg-secondary/50 rounded-lg animate-pulse"></h2>
-              <p className="w-[67%] h-4 bg-secondary/50 rounded-lg animate-pulse"></p>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-4 w-full">
-          <span className="w-[40%] h-4 bg-secondary/50 rounded-lg  animate-pulse"></span>
-          <div className="flex items-start gap-6 w-full">
-            <span className="w-[100px] h-[100px] rounded-full bg-secondary/50 animate-pulse"></span>
-            <div className="flex flex-col gap-2 w-[50%]">
-              <h2 className="w-[74%] h-6 bg-secondary/50 rounded-lg animate-pulse"></h2>
-              <p className="w-[87%] h-4 bg-secondary/50 rounded-lg animate-pulse"></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col gap-4 items-start w-full">
-        <span className="w-[26%] h-4 bg-secondary/50 rounded-md animate-pulse"></span>
-        <p className="w-[24%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-        <p className="w-[67%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-        <p className="w-[47%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-        <p className="w-[68%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-        <p className="w-[37%] h-4 bg-secondary/50 rounded-md animate-pulse"></p>
-      </div>
-    </div>
+    <Table>
+      {/* <TableHeader>
+        <TableRow>
+          <TableHead>Patient</TableHead>
+          <TableHead>Doctor</TableHead>
+          <TableHead>Date & Time</TableHead>
+          <TableHead>Location</TableHead>
+          <TableHead>Fees</TableHead>
+          <TableHead>Status</TableHead>
+        </TableRow>
+      </TableHeader> */}
+      <TableBody>
+        {[...Array(10)].map((_, index) => (
+          <TableRow key={index}>
+            <TableCell>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-secondary/50 animate-pulse"></div>
+                <div className="space-y-2">
+                  <div className="w-24 h-4 bg-secondary/50 rounded animate-pulse"></div>
+                  <div className="w-32 h-3 bg-secondary/50 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-secondary/50 animate-pulse"></div>
+                <div className="space-y-2">
+                  <div className="w-24 h-4 bg-secondary/50 rounded animate-pulse"></div>
+                  <div className="w-32 h-3 bg-secondary/50 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </TableCell>
+            <TableCell>
+              <div className="w-32 h-4 bg-secondary/50 rounded animate-pulse"></div>
+            </TableCell>
+            <TableCell>
+              <div className="w-24 h-4 bg-secondary/50 rounded animate-pulse"></div>
+            </TableCell>
+            <TableCell>
+              <div className="w-16 h-4 bg-secondary/50 rounded animate-pulse"></div>
+            </TableCell>
+            <TableCell>
+              <div className="w-20 h-6 bg-secondary/50 rounded-full animate-pulse"></div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
