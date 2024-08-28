@@ -1,6 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
 import { deleteReplyById } from "@/lib/api";
-import { ReplyType } from "@/types/Posts";
 import { Trash } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useReplies } from "@/hooks/useComments";
-import { CommentType } from "@/types/Posts";
 import Reply from "./Reply";
 import { timeAgo } from "@/lib/timeAgoFunction";
 import { Trash } from "lucide-react";

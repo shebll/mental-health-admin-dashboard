@@ -1,5 +1,4 @@
 import { useComments } from "@/hooks/useComments";
-import { Post } from "@/types/Posts";
 import React, { useState } from "react";
 import Comment from "./Comment";
 interface CommentSectionProps {
