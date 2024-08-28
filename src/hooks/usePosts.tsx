@@ -1,6 +1,5 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
-import { Post } from "@/types/Posts";
 import { useState, useEffect } from "react";
 
 const usePosts = (page: any, filters: any) => {

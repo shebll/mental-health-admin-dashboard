@@ -1,4 +1,3 @@
-import { CommentType, ReplyType } from "@/types/Posts";
 import { useState, useEffect } from "react";
 
 export const useComments = (postId: string) => {
