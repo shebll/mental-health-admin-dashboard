@@ -23,7 +23,7 @@ const DoctorsFeed = () => {
     initialPageParam: 1,
     queryKey: ["doctors", filters, token],
     queryFn: ({ pageParam = 1 }) =>
-      fetchDoctors(pageParam, 10, filters, token as string),
+      fetchDoctors(pageParam, 20, filters, token as string),
     getNextPageParam: (lastPage) =>
       lastPage.hasNext ? lastPage.page + 1 : undefined,
     enabled: !!token,
@@ -55,7 +55,7 @@ const DoctorLoading = () => {
   return (
     <Table>
       <TableBody>
-        {[...Array(5)].map((_, index) => (
+        {[...Array(15)].map((_, index) => (
           <TableRow key={index}>
             <TableCell>
               <div className="w-24 h-6 bg-secondary/50 rounded animate-pulse"></div>

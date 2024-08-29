@@ -7,25 +7,24 @@ import { useUserFilters } from "./useUserFilter";
 export default function UsersFilter() {
   const [filterPopUp, setFilterPopUp] = useState(false);
   const { filters, handleChange, resetFilters } = useUserFilters();
-  console.log(filters);
 
   const handleSubmit = () => {};
   return (
     <>
       <span
-        className={`fixed md:hidden top-6 right-10`}
+        className={`fixed xl:hidden top-6 right-10`}
         onClick={() => setFilterPopUp((prev) => !prev)}
       >
         <Filter />
       </span>
       <span
-        className={` md:hidden ${
+        className={` xl:hidden ${
           filterPopUp ? "fixed" : "hidden"
         } inset-0 bg-black/20 backdrop-blur-sm h-screen w-full`}
         onClick={() => setFilterPopUp((prev) => !prev)}
       />
       <div
-        className={`flex flex-col gap-6 p-4 border rounded-md h-fit fixed md:sticky top-20 md:top-10 bg-background transition-all ${
+        className={`flex flex-col gap-6 p-4 border rounded-md h-fit fixed xl:sticky top-20 xl:top-10 bg-background transition-all ${
           filterPopUp ? "right-[5%]" : " right-[-100%]"
         } `}
       >

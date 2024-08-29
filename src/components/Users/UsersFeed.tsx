@@ -1,25 +1,18 @@
-import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { deleteUserById, fetchUsers } from "@/lib/api";
-
-import UserDetails from "@/components/Users/UserDetails";
 import InfinityScrolling from "../layout/InfinityScrolling";
 import { useUserFilters } from "./useUserFilter";
 import UserTable from "./UserTable";
+
+import { fetchUsers } from "@/lib/api";
+
+import { useInfiniteQuery } from "@tanstack/react-query";
+
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { toast } from "sonner";
 
 function UsersFeed() {
   const { filters } = useUserFilters();
-  console.log(filters);
   const { token } = useAuth();
-  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
   const {
     isFetchingNextPage,
@@ -29,11 +22,10 @@ function UsersFeed() {
     isError,
     isLoading,
     error,
-    refetch,
   } = useInfiniteQuery({
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
-      fetchUsers(pageParam, 10, filters, token as string),
+      fetchUsers(pageParam, 20, filters, token as string),
     getNextPageParam: (data) => (data.hasNext ? data.page + 1 : undefined),
     getPreviousPageParam: (data) => (data.hasNext ? data.page - 1 : undefined),
     queryKey: ["users", filters, token],
@@ -42,25 +34,10 @@ function UsersFeed() {
 
   const allUsers = data?.pages.flatMap((page) => page.data) || [];
 
-  const queryClient = useQueryClient();
-  const deleteMutation = useMutation({
-    mutationFn: (userId: string) => deleteUserById(token as string, userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-      toast.success("User deleted successfully");
-      setSelectedUser(null);
-    },
-    onError: () => toast.error("Failed to delete user"),
-  });
-
   return (
     <div className="flex-1">
       <div className="flex-1 flex flex-col gap-4">
-        <UserTable
-          users={allUsers}
-          onUserClick={setSelectedUser}
-          onDeleteUser={(userId) => deleteMutation.mutate(userId)}
-        />
+        <UserTable users={allUsers} />
         {allUsers.length === 0 && !isLoading && (
           <p className="text-center mt-4">No Users Found</p>
         )}
@@ -72,14 +49,6 @@ function UsersFeed() {
         fetchNextPage={fetchNextPage}
         isFetchingNextPage={isFetchingNextPage}
       />
-
-      {selectedUser && (
-        <UserDetails
-          user={selectedUser}
-          onDelete={() => {}}
-          onClose={() => setSelectedUser(null)}
-        />
-      )}
     </div>
   );
 }
@@ -90,7 +59,7 @@ const UserLoading = () => {
   return (
     <Table>
       <TableBody>
-        {[...Array(8)].map((_, index) => (
+        {[...Array(15)].map((_, index) => (
           <TableRow key={index}>
             <TableCell>
               <div className="flex items-center space-x-3">

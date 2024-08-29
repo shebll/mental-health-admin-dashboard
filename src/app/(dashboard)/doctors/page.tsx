@@ -8,7 +8,7 @@ import DoctorsFeed from "@/components/Doctors/DoctorsFeed";
 const DoctorsPage = () => {
   return (
     <DoctorFiltersProvider>
-      <div className="container mx-auto p-4 max-w-[1200px]">
+      <div className="container mx-auto p-4 ">
         <div className="flex justify-between">
           <h1 className="text-2xl font-bold mb-4">Doctors</h1>
           <Link href="/doctors/add">

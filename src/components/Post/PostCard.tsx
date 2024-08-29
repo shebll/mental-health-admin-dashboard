@@ -38,7 +38,7 @@ const PostCard = ({ post, onDelete }: PostCardProps) => {
         onCancel={() => setConfirmDelete(false)}
         onConfirm={handleDelete}
       />
-      <div className="flex flex-col gap-2 border p-4 rounded-md">
+      <div className="flex flex-col gap-2 border p-4 rounded-md ">
         <div className="px-6 py-8 bg-primary-foreground shadow-md rounded-lg flex gap-2 flex-col">
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
@@ -79,8 +79,8 @@ const PostCard = ({ post, onDelete }: PostCardProps) => {
           </div>
           {post.postPhotoUrl && (
             <Image
-              width={540}
-              height={300}
+              width={440}
+              height={200}
               quality={100}
               src={post.postPhotoUrl}
               alt="Post"

@@ -1,102 +1,63 @@
-import { FC, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useAuth } from "@/context/AuthContext";
-import { deleteUserById } from "@/lib/api";
 import { Trash } from "lucide-react";
-import { toast } from "sonner";
-import ConfirmationPopup from "../layout/ConfirmationPopup";
-import axios from "axios";
+
 interface UserDetailsProps {
   user: UserType | null;
-  onDelete: (userId: string) => void;
   onClose: () => void;
+  setConfirmDelete: (value: boolean) => void;
 }
 
-const UserDetails: FC<UserDetailsProps> = ({ user, onClose, onDelete }) => {
-  const { token } = useAuth();
-  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
+const UserDetails = ({ user, onClose, setConfirmDelete }: UserDetailsProps) => {
   if (!user) return null;
 
-  const handleDelete = async () => {
-    if (token) {
-      try {
-        const response = await deleteUserById(token, user.id);
-        toast.success("User Deleted Successfully");
-        onDelete(user.id);
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          // if api provider given error
-          if (error.response) {
-            toast.error(`Error : ${error.response.data.message}`);
-          } else {
-            toast.error(`Error : ${error.message}`);
-          }
-        } else if (error instanceof Error) {
-          toast.error(`${error.message}`);
-        } else {
-          toast.error("Something went wrong try again");
-        }
-      } finally {
-      }
-    }
-  };
   return (
     <>
-      <ConfirmationPopup
-        isOpen={confirmDelete}
-        message={`All the information for this user will be deleted.`}
-        confirmText={`Delete/${user.firstName}-${user.lastName}`}
-        onCancel={() => setConfirmDelete(false)}
-        onConfirm={handleDelete}
-      />
-      <div className="fixed inset-0 bg-background/50 backdrop-blur-sm flex justify-center items-center z-[20] p-2">
+      <div className="fixed inset-0 bg-background/70 backdrop-blur-sm flex justify-center items-center z-50 p-4">
         <span
           onClick={onClose}
-          className="absolute inset-0 w-full h-screen z-[1]"
+          className="absolute inset-0 w-full h-full z-40"
         />
-        <div className="flex flex-col justify-start items-start gap-14 bg-secondary p-4 md:px-8 py-4 rounded-md z-[2]">
-          <div className="flex flex-col md:flex-row justify-start gap-y-8 gap-x-20 items-start">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-start gap-6">
-                <Image
-                  src={user.photoUrl ? user.photoUrl : "/user.png"}
-                  alt="clientPhotoUrl"
-                  width={100}
-                  height={100}
-                  className=" rounded-full"
-                />
-                <div className="flex flex-col gap-1">
-                  <h2 className="text-lg font-bold">
-                    <strong>{user.firstName + user.lastName}</strong>{" "}
-                  </h2>
-                  <p>
-                    Email: <strong>{user.email} </strong>
-                  </p>
-                </div>
+        <div className="relative bg-secondary text-primary p-6 md:p-8 rounded-lg shadow-lg z-50 max-w-md w-full">
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-4">
+              <Image
+                src={user.photoUrl ? user.photoUrl : "/user.png"}
+                alt="User Photo"
+                width={80}
+                height={80}
+                className="rounded-full"
+              />
+              <div>
+                <h2 className="text-xl font-semibold">
+                  {user.firstName} {user.lastName}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  <strong>Email:</strong> {user.email}
+                </p>
               </div>
             </div>
-            <div
+            <button
               onClick={(e) => {
                 e.stopPropagation();
                 setConfirmDelete(true);
               }}
-              className="cursor-pointer"
+              className="p-2 rounded-md hover:bg-accent transition"
             >
-              <Trash />
-            </div>
+              <Trash className="w-5 h-5 text-destructive" />
+            </button>
           </div>
-          <div className="flex flex-col gap-2 items-start">
-            <h2 className="text-lg font-bold">details</h2>
-            <p>
-              birthDate: <strong> ${user.birthDate} </strong>
+          <div className="mb-6">
+            <h3 className="text-lg font-medium mb-2">Details</h3>
+            <p className="text-sm">
+              <strong>Birth Date:</strong> {user.birthDate}
             </p>
-            <p>
-              gender: <strong> {user.gender} </strong>
+            <p className="text-sm">
+              <strong>Gender:</strong> {user.gender}
             </p>
           </div>
-          <Button className="w-full mt-6" onClick={onClose}>
-            close
+          <Button className="w-full" onClick={onClose}>
+            Close
           </Button>
         </div>
       </div>

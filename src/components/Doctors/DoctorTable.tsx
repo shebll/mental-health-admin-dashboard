@@ -44,7 +44,7 @@ const DoctorTable: FC<DoctorCardProps> = ({ doctors }) => {
     mutationFn: (doctorId: string) =>
       deleteDoctorById(token as string, doctorId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["doctors"] });
+      queryClient.invalidateQueries({ queryKey: ["doctors", "analytics"] });
       toast.success("Doctor deleted successfully");
       setSelectedDoctor(null);
     },

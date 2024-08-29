@@ -33,7 +33,7 @@ function AppointmentsFeed() {
   } = useInfiniteQuery({
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
-      fetchAppointments(pageParam, 10, filters, token as string),
+      fetchAppointments(pageParam, 20, filters, token as string),
     getNextPageParam: (data) => (data.hasNext ? data.page + 1 : undefined),
     queryKey: ["appointments", filters, token],
     enabled: !!token,
@@ -87,7 +87,7 @@ const AppointmentLoading = () => {
         </TableRow>
       </TableHeader> */}
       <TableBody>
-        {[...Array(10)].map((_, index) => (
+        {[...Array(12)].map((_, index) => (
           <TableRow key={index}>
             <TableCell>
               <div className="flex items-center space-x-3">

@@ -24,7 +24,7 @@ function PostsFeed() {
   } = useInfiniteQuery({
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
-      fetchPosts(pageParam, 10, filters, token as string),
+      fetchPosts(pageParam, 20, filters, token as string),
     getNextPageParam: (data) => (data.hasNext ? data.page + 1 : undefined),
     queryKey: ["posts", filters, token],
     enabled: !!token,
@@ -35,7 +35,7 @@ function PostsFeed() {
   };
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 ">
       <div className="flex flex-col gap-4">
         {data?.pages
           .flatMap((page) => page.data)
@@ -47,6 +47,9 @@ function PostsFeed() {
         )}
         {(isLoading || isFetchingNextPage) && (
           <div className="flex flex-col gap-4">
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
             <PostSkeleton />
             <PostSkeleton />
             <PostSkeleton />
